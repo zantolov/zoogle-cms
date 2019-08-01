@@ -1,10 +1,26 @@
 {
-    "name": "zantolov/zoogle-cms",
-    "authors": [
-        {
-            "name": "Zoran Antolovic",
-            "email": "zoran.antolovic.os@gmail.com"
-        }
-    ],
-    "require": {}
+  "name": "zantolov/zoogle-cms",
+  "authors": [
+    {
+      "name": "Zoran Antolovic",
+      "email": "zoran.antolovic.os@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Zantolov\\ZoogleCms\\": "src/"
+    }
+  },
+  "require": {
+    "php": "^7.1",
+    "zantolov/toolbelt": "@dev",
+    "ext-json": "*",
+    "google/apiclient": "^2.2",
+    "symfony/dom-crawler": "^4.3",
+    "symfony/css-selector": "^4.3",
+    "ext-dom": "*"
+  },
+  "require-dev": {
+    "zantolov/toolbelt-dev": "@dev"
+  }
 }
