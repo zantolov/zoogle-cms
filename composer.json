@@ -1,0 +1,10 @@
+{
+    "name": "zantolov/zoogle-cms",
+    "authors": [
+        {
+            "name": "Zoran Antolovic",
+            "email": "zoran.antolovic.os@gmail.com"
+        }
+    ],
+    "require": {}
+}
