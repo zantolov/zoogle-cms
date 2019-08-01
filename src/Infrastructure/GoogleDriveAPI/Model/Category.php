@@ -10,13 +10,13 @@ use Zantolov\ZoogleCms\Domain\ValueObject\CategoryId as CategoryIdInterface;
 
 final class Category implements CategoryInterface
 {
-    /** @var CategoryId */
+    /** @var CategoryIdInterface */
     private $id;
 
     /** @var string */
     private $slug;
 
-    /** @var CategoryId */
+    /** @var CategoryIdInterface|null */
     private $parentId;
 
     public static function fromGoogleDriveFile(Google_Service_Drive_DriveFile $file, ?string $parentId = null)

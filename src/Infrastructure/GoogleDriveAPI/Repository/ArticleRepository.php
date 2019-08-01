@@ -30,7 +30,6 @@ final class ArticleRepository implements ArticleRepositoryInterface
         $this->articleFactory = $articleFactory;
     }
 
-    /** @return Article[] */
     private function sort(array &$items): void
     {
         uasort($items, function (Article $a, Article $b) {

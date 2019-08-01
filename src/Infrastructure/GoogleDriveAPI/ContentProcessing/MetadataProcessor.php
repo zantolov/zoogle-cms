@@ -9,8 +9,12 @@ use Symfony\Component\DomCrawler\Crawler;
 
 final class MetadataProcessor
 {
-    private function removeNode(DOMElement $node)
+    private function removeNode(?DOMElement $node)
     {
+        if (null === $node) {
+            return;
+        }
+
         $node->parentNode->removeChild($node);
     }
 
@@ -91,10 +95,7 @@ final class MetadataProcessor
 
         $firstImage = $images->first();
         $url = $firstImage->attr('src');
-
-        $firstImageNode = $firstImage->getNode(0);
-        $firstImageNode->parentNode->removeChild($firstImageNode);
-
+        $this->removeNode($firstImage->getNode(0));
         $html = $crawler->html();
 
         return $url;

@@ -8,10 +8,10 @@ use Assert\Assertion;
 
 final class GoogleDriveAuth
 {
-    /** @var string  */
+    /** @var string */
     private $clientId;
 
-    /** @var string  */
+    /** @var string */
     private $authConfigPath;
 
     public function __construct(string $clientId, string $authConfigPath)
@@ -29,6 +29,10 @@ final class GoogleDriveAuth
     public function getAuthConfig(): array
     {
         $data = file_get_contents($this->authConfigPath);
+        if (false === $data) {
+            throw new \RuntimeException('Could not load the auth file');
+        }
+
         Assertion::isJsonString($data);
         $data = json_decode($data, true);
 
