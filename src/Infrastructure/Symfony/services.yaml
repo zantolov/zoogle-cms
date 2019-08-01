@@ -1,7 +1,11 @@
 services:
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
   Zantolov\ZoogleCms\Infrastructure\:
-    resource: '../src/Infrastructure/*'
-    exclude: '../src/Infrastructure/{Symfony,GoogleDriveApi/Model,Migrations,Tests,Kernel.php}'
+    resource: '../*'
+    exclude: '../{Symfony,GoogleDriveApi/Model,Migrations,Tests,Kernel.php}'
 
   Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Client\GoogleDriveAuth:
     arguments:
