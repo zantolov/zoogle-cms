@@ -1,0 +1,17 @@
+services:
+  Zantolov\ZoogleCms\Infrastructure\:
+    resource: '../src/Infrastructure/*'
+    exclude: '../src/Infrastructure/{Symfony,GoogleDriveApi/Model,Migrations,Tests,Kernel.php}'
+
+  Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Client\GoogleDriveAuth:
+    arguments:
+      $authConfigPath: '%kernel.project_dir%/%env(GOOGLE_DRIVE_API_AUTH_FILE_PATH)%'
+      $clientId: '%env(GOOGLE_DRIVE_API_CLIENT_ID)%'
+
+  Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Configuration\Configuration:
+    arguments:
+      $rootDirectoryId: '%env(GOOGLE_DRIVE_ROOT_DIRECTORY_ID)%'
+
+  Zantolov\ZoogleCms\Domain\CategoryRepository: '@Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\CategoryRepository'
+  Zantolov\ZoogleCms\Domain\ArticleRepository: '@Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\ArticleRepository'
+
