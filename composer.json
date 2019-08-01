@@ -18,7 +18,10 @@
     "google/apiclient": "^2.2",
     "symfony/dom-crawler": "^4.3",
     "symfony/css-selector": "^4.3",
-    "ext-dom": "*"
+    "ext-dom": "*",
+    "symfony/config": "^4.3",
+    "symfony/dependency-injection": "^4.3",
+    "symfony/http-kernel": "^4.3"
   },
   "require-dev": {
     "zantolov/toolbelt-dev": "@dev"
