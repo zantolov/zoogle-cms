@@ -7,7 +7,7 @@ namespace Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Factory;
 use DateTimeImmutable;
 use Exception;
 use Google_Service_Drive_DriveFile;
-use Zantolov\ZoogleCms\Domain\Article as ArticleInterface;
+use Zantolov\ZoogleCms\Domain\Post as ArticleInterface;
 use Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Client\GoogleDriveClient;
 use Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\ContentProcessing\MetadataProcessor;
 use Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\ContentProcessing\StyleRemover;

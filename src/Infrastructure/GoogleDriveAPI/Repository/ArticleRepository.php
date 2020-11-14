@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository;
 
-use Zantolov\ZoogleCms\Domain\Article;
+use Zantolov\ZoogleCms\Domain\Post;
 use Zantolov\ZoogleCms\Domain\ArticleRepository as ArticleRepositoryInterface;
 use Zantolov\ZoogleCms\Domain\ValueObject\ArticleId;
 use Zantolov\ZoogleCms\Domain\ValueObject\CategoryId;

@@ -15,18 +15,11 @@ class GoogleDriveClient
     private const DOC_MIME_TYPE = 'application/vnd.google-apps.document';
     private const FOLDER_MIME_TYPE = 'application/vnd.google-apps.folder';
 
-    /** @var GoogleDriveAuth */
-    private $auth;
+    private GoogleDriveAuth $auth;
 
-    /** @var Google_Client */
-    private $client;
+    private Google_Client $client;
 
-    /** @var Configuration */
-    private $config;
-    /**
-     * @var Configuration
-     */
-    private $configuration;
+    private Configuration $configuration;
 
     public function __construct(GoogleDriveAuth $auth, Configuration $configuration)
     {

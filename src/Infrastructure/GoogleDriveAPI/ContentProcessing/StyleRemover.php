@@ -9,6 +9,21 @@ use Symfony\Component\DomCrawler\Crawler;
 
 final class StyleRemover
 {
+    public function process(string $html): string
+    {
+        $crawler = new Crawler($html);
+        $crawler = $crawler->filter('body')->first();
+
+        $this->removeExtraTags($crawler);
+        $this->removeSpans($crawler);
+
+        foreach ($crawler->children() as $node) {
+            $this->cleanUpAttributes($node);
+        }
+
+        return $crawler->html();
+    }
+
     private function cleanUpAttributes(DOMElement $node)
     {
         $node->removeAttribute('id');
@@ -27,24 +42,9 @@ final class StyleRemover
         $node->parentNode->removeChild($node);
     }
 
-    public function process(string $html): string
-    {
-        $crawler = new Crawler($html);
-        $crawler = $crawler->filter('body')->first();
-
-        $this->removeExtraTags($crawler);
-        $this->removeSpans($crawler);
-
-        foreach ($crawler->children() as $node) {
-            $this->cleanUpAttributes($node);
-        }
-
-        return $crawler->html();
-    }
-
     private function removeSpans(Crawler $crawler)
     {
-        foreach ($crawler->filter('*>span') as $domElement) {
+        foreach ($crawler->filter('* > span') as $domElement) {
             $parent = $domElement->parentNode;
 
             foreach ($domElement->childNodes as $childNode) {

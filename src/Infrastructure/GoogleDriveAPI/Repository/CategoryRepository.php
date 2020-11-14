@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository;
 
+use Zantolov\ZoogleCms\Application\FindCategories\FindCategories;
+use Zantolov\ZoogleCms\Application\FindCategories\FindChildCategories;
 use Zantolov\ZoogleCms\Domain\Category as CategoryInterface;
+use Zantolov\ZoogleCms\Domain\Category\Category;
 use Zantolov\ZoogleCms\Domain\CategoryRepository as CategoryRepositoryInterface;
-use Zantolov\ZoogleCms\Domain\ValueObject\CategoryId;
 use Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Client\GoogleDriveClient;
 use Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Configuration\Configuration;
-use Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Model\Category;
 
-final class CategoryRepository implements CategoryRepositoryInterface
+final class CategoryRepository implements FindCategories, FindChildCategories
 {
     /** @var Configuration */
     private $configuration;
@@ -75,5 +76,15 @@ final class CategoryRepository implements CategoryRepositoryInterface
         }
 
         return null;
+    }
+
+    public function all(): array
+    {
+        // TODO: Implement find() method.
+    }
+
+    public function findChildCategories(Category $category): array
+    {
+        // TODO: Implement findChildCategories() method.
     }
 }
