@@ -16,12 +16,12 @@
     "zantolov/toolbelt": "@dev",
     "ext-json": "*",
     "google/apiclient": "^2.2",
-    "symfony/dom-crawler": "^4.3",
-    "symfony/css-selector": "^4.3",
+    "symfony/dom-crawler": "^5.1",
+    "symfony/css-selector": "^5.1",
     "ext-dom": "*",
-    "symfony/config": "^4.3",
-    "symfony/dependency-injection": "^4.3",
-    "symfony/http-kernel": "^4.3"
+    "symfony/config": "^5.1",
+    "symfony/dependency-injection": "^5.1",
+    "symfony/http-kernel": "^5.1"
   },
   "require-dev": {
     "zantolov/toolbelt-dev": "@dev"
