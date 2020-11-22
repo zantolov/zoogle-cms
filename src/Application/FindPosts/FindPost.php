@@ -8,5 +8,7 @@ use Zantolov\ZoogleCms\Domain\Post\Post;
 
 interface FindPost
 {
-    public function find(string $slug): ?Post;
+    public function findBySlug(string $slug): ?Post;
+
+    public function findById(string $id): ?Post;
 }

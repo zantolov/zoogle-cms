@@ -6,10 +6,10 @@ namespace Zantolov\ZoogleCms\Domain\Post;
 
 final class PostId
 {
-    public string $id;
+    public string $value;
 
     public function __construct(string $id)
     {
-        $this->id = $id;
+        $this->value = $id;
     }
 }

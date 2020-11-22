@@ -12,7 +12,7 @@ class Post
     public string $content;
     public \DateTimeImmutable $publishDateTime;
     public ?string $headingImageUrl;
-    public ?string $authorCaption;
+    public ?Author $author;
 
     public function __construct(
         PostId $id,
@@ -21,7 +21,7 @@ class Post
         string $content,
         \DateTimeImmutable $publishDateTime,
         ?string $headingImageUrl,
-        ?string $authorCaption
+        ?Author $author
     ) {
         $this->id = $id;
         $this->title = $title;
@@ -29,6 +29,6 @@ class Post
         $this->content = $content;
         $this->publishDateTime = $publishDateTime;
         $this->headingImageUrl = $headingImageUrl;
-        $this->authorCaption = $authorCaption;
+        $this->author = $author;
     }
 }

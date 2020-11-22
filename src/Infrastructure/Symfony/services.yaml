@@ -16,6 +16,12 @@ services:
     arguments:
       $rootDirectoryId: '%env(GOOGLE_DRIVE_ROOT_DIRECTORY_ID)%'
 
-  Zantolov\ZoogleCms\Domain\CategoryRepository: '@Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\CategoryRepository'
-  Zantolov\ZoogleCms\Domain\ArticleRepository: '@Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\ArticleRepository'
+  Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\CategoryRepository: ~
+  Zantolov\ZoogleCms\Application\FindCategories\FindCategories: '@Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\CategoryRepository'
+  Zantolov\ZoogleCms\Application\FindCategories\FindCategory: '@Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\CategoryRepository'
+  Zantolov\ZoogleCms\Application\FindCategories\FindChildCategories: '@Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\CategoryRepository'
 
+  Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\PostRepository: ~
+  Zantolov\ZoogleCms\Application\FindPosts\FindPostsInCategory: '@Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\PostRepository'
+  Zantolov\ZoogleCms\Application\FindPosts\FindPost: '@Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\PostRepository'
+  Zantolov\ZoogleCms\Application\FindPosts\FindUncategorizedPosts: '@Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\PostRepository'

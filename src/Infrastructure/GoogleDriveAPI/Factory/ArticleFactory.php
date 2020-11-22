@@ -7,68 +7,80 @@ namespace Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Factory;
 use DateTimeImmutable;
 use Exception;
 use Google_Service_Drive_DriveFile;
-use Zantolov\ZoogleCms\Domain\Post as ArticleInterface;
+use Psr\Cache\CacheItemPoolInterface;
+use Zantolov\ZoogleCms\Domain\Post\Author;
+use Zantolov\ZoogleCms\Domain\Post\Post;
+use Zantolov\ZoogleCms\Domain\Post\PostId;
 use Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Client\GoogleDriveClient;
 use Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\ContentProcessing\MetadataProcessor;
 use Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\ContentProcessing\StyleRemover;
-use Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Model\Article;
-use Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Model\ArticleId;
 
 class ArticleFactory
 {
-    /** @var GoogleDriveClient */
-    private $client;
+    private GoogleDriveClient $client;
+    private MetadataProcessor $metadataReader;
+    private CacheItemPoolInterface $cache;
 
-    /** @var MetadataProcessor */
-    private $metadataReader;
-
-    public function __construct(GoogleDriveClient $client, MetadataProcessor $metadataReader)
-    {
+    public function __construct(
+        GoogleDriveClient $client,
+        MetadataProcessor $metadataReader,
+        CacheItemPoolInterface $cache
+    ) {
         $this->client = $client;
         $this->metadataReader = $metadataReader;
+        $this->cache = $cache;
     }
 
     /**
      * @throws Exception
      */
-    public function make(Google_Service_Drive_DriveFile $file): ArticleInterface
+    public function make(Google_Service_Drive_DriveFile $file): Post
     {
-        $html = $this->client->getDocAsHTML($file->getId());
+        $html = $this->loadFileContent($file);
         $title = $this->metadataReader->extractTitle($html);
-        $meta = $this->metadataReader->extractMeta($html);
+        $metadata = $this->metadataReader->extractMeta($html);
         $leadingImageUrl = $this->metadataReader->extractFirstImageUrl($html);
+        $html = (new StyleRemover())->process($html);
 
-        $authorCaption = $meta['author'] ?? null;
+        $publishDateTime = $metadata->has('publish') ? new DateTimeImmutable($metadata->get('publish')) : null;
+        $author = $metadata->has('author') ? new Author($metadata->get('author')) : null;
 
-        $tags = explode(',', $meta['tags'] ?? '');
-        foreach ($tags as &$tag) {
-            $tag = trim($tag);
-        }
-
-        $publishDateTime = null;
-        if (true === array_key_exists('publish', $meta)) {
-            $publishDateTime = new DateTimeImmutable($meta['publish']);
-        }
-
-        // @todo add support for modifiying the article body
-        // @todo handle header metadata
-        // @todo handle ignored area
-        $processors = [];
-        $processors[] = new StyleRemover();
-
-        foreach ($processors as $processor) {
-            $html = $processor->process($html);
-        }
-
-        return new Article(
-            new ArticleId($file->getId()),
+        return new Post(
+            new PostId($file->getId()),
             $title,
             $file->getName(),
             $html,
             $publishDateTime,
-            $authorCaption,
             $leadingImageUrl,
-            $tags
+            $author
         );
+    }
+
+    private function loadFileContent(Google_Service_Drive_DriveFile $file): string
+    {
+        $item = $this->cache->getItem($file->id);
+        $isModified = true;
+
+        // Check if the cached version of the file has been modified on the upstream server
+        // by comparing the modified_at timestamp of the cached file and the $modifiedTime prop of Google Drive file
+        if (true === $item->isHit()) {
+            $data = $item->get();
+            $modifiedTime = $file->getModifiedTime() !== null ? new DateTimeImmutable($file->getModifiedTime()) : null;
+            $cachedModifiedDate = $data['modified_at'] !== null ? new DateTimeImmutable($data['modified_at']) : null;
+
+            $isModified = $modifiedTime !== null
+                && $cachedModifiedDate !== null
+                && $cachedModifiedDate < $modifiedTime;
+        }
+
+        if (false === $item->isHit() || true === $isModified) {
+            $item->set([
+                'html' => $this->client->getDocAsHTML($file->getId()),
+                'modified_at' => $file->getModifiedTime(),
+            ]);
+            $this->cache->save($item);
+        }
+
+        return $item->get()['html'];
     }
 }

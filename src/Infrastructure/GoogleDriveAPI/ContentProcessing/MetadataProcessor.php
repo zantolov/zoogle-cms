@@ -48,9 +48,9 @@ final class MetadataProcessor
      * - tags: {comma separated list of tags}
      *
      * @param string $html HTML to be processed and updated
-     * @return array key-value pairr of recognized meta data
+     * @return array key-value pair of recognized meta data
      */
-    public function extractMeta(string &$html): array
+    public function extractMeta(string &$html): Metadata
     {
         $crawler = new Crawler($html);
         $metaList = $crawler->filter('h1:contains("Meta") + ul')->first();
@@ -74,7 +74,13 @@ final class MetadataProcessor
 
         $html = $crawler->html();
 
-        return $meta;
+        if (isset($meta['tags']) && is_string($meta['tags']) && mb_strlen(trim($meta['tags'])) > 0) {
+            $tags = explode(',', $meta['tags']);
+            $tags = array_map(fn (string $item) => trim($item), $tags);
+            $meta['tags'] = $tags;
+        }
+
+        return new Metadata($meta);
     }
 
     /**

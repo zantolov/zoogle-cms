@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Application\FindPosts;
 
-interface FindUncategorizedPosts
+interface FindPostsByAuthor
 {
-    public function findUncategorized(): array;
+    public function findByAuthor(): array;
 }

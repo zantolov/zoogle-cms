@@ -6,10 +6,10 @@ namespace Zantolov\ZoogleCms\Domain\Category;
 
 final class CategoryId
 {
-    public string $id;
+    public string $value;
 
     public function __construct(string $id)
     {
-        $this->id = $id;
+        $this->value = $id;
     }
 }
