@@ -56,7 +56,7 @@ final class MetadataProcessor
         $metaList = $crawler->filter('h1:contains("Meta") + ul')->first();
 
         if (0 === $metaList->count()) {
-            return [];
+            return new Metadata([]);
         }
 
         $meta = [];

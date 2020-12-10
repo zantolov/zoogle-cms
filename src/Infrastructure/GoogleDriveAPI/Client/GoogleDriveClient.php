@@ -12,12 +12,15 @@ use Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Configuration\Configuration
 
 class GoogleDriveClient
 {
+    private const FIELDS = 'files(*)';
     private const DOC_MIME_TYPE = 'application/vnd.google-apps.document';
     private const FOLDER_MIME_TYPE = 'application/vnd.google-apps.folder';
 
     private GoogleDriveAuth $auth;
     private Google_Client $client;
     private Configuration $configuration;
+
+    private array $cache = [];
 
     public function __construct(GoogleDriveAuth $auth, Configuration $configuration)
     {
@@ -35,92 +38,130 @@ class GoogleDriveClient
         $this->client->setAuthConfig($this->auth->getAuthConfig());
     }
 
+    private function cached(string $key, callable $callback)
+    {
+        $cachedData = $this->cache[$key] ?? null;
+        if (null !== $cachedData) {
+            return $cachedData;
+        }
+
+        $data = $callback();
+        $this->cache[$key] = $data;
+
+        return $data;
+    }
+
     /** @return Google_Service_Drive_DriveFile[] */
     public function listDirectories(string $directoryId = null, int $limit = 1000): array
     {
-        $service = new Google_Service_Drive($this->client);
+        $cacheKey = json_encode([__METHOD__, $directoryId, $limit]);
 
-        $query = [
-            sprintf('mimeType = "%s"', self::FOLDER_MIME_TYPE),
-        ];
+        return $this->cached($cacheKey, function () use ($directoryId, $limit) {
+            $service = new Google_Service_Drive($this->client);
 
-        if (null !== $directoryId) {
-            $query[] = sprintf('"%s" in parents', $directoryId);
-        }
+            $query = [
+                sprintf('mimeType = "%s"', self::FOLDER_MIME_TYPE),
+            ];
 
-        $fileList = $service->files->listFiles([
-            'fields' => 'files(id, name, modifiedTime)',
-            'q' => implode(' AND ', $query),
-            'pageSize' => $limit,
-        ]);
+            if (null !== $directoryId) {
+                $query[] = sprintf('"%s" in parents', $directoryId);
+            }
 
-        return $fileList->getFiles();
+            $fileList = $service->files->listFiles([
+                'fields' => self::FIELDS,
+                'q' => implode(' AND ', $query),
+                'pageSize' => $limit,
+            ]);
+
+            return $fileList->getFiles();
+        });
     }
 
     /** @return Google_Service_Drive_DriveFile[] */
     public function listRootDirectories(int $limit = 1000): array
     {
-        return $this->listDirectories($this->configuration->getRootDirectoryId(), $limit);
+        $cacheKey = json_encode([__METHOD__, $limit]);
+
+        return $this->cached($cacheKey, function () use ($limit) {
+            return $this->listDirectories($this->configuration->getRootDirectoryId(), $limit);
+        });
     }
 
     /** @return Google_Service_Drive_DriveFile[] */
     public function listDocs(string $directoryId, int $limit = 1000): array
     {
-        $service = new Google_Service_Drive($this->client);
+        $cacheKey = json_encode([__METHOD__, $directoryId, $limit]);
 
-        $query = [
-            sprintf('mimeType = "%s"', self::DOC_MIME_TYPE),
-            sprintf('"%s" in parents', $directoryId),
-        ];
+        return $this->cached($cacheKey, function () use ($directoryId, $limit) {
+            $service = new Google_Service_Drive($this->client);
 
-        $fileList = $service->files->listFiles([
-            'fields' => 'files(id, name, modifiedTime)',
-            'q' => implode(' AND ', $query),
-            'pageSize' => $limit,
-        ]);
+            $query = [
+                sprintf('mimeType = "%s"', self::DOC_MIME_TYPE),
+                sprintf('"%s" in parents', $directoryId),
+            ];
 
-        return $fileList->getFiles();
+            $fileList = $service->files->listFiles([
+                'fields' => self::FIELDS,
+                'q' => implode(' AND ', $query),
+                'pageSize' => $limit,
+            ]);
+
+            return $fileList->getFiles();
+        });
     }
 
     /** @return Google_Service_Drive_DriveFile[] */
     public function listAllDocs(int $limit = 1000): array
     {
-        $service = new Google_Service_Drive($this->client);
+        $cacheKey = json_encode([__METHOD__, $limit]);
 
-        $query = [
-            sprintf('mimeType = "%s"', self::DOC_MIME_TYPE),
-        ];
+        return $this->cached($cacheKey, function () use ($limit) {
+            $service = new Google_Service_Drive($this->client);
 
-        $fileList = $service->files->listFiles([
-            'fields' => 'files(id, name, modifiedTime)',
-            'q' => implode(' AND ', $query),
-            'pageSize' => $limit,
-        ]);
+            $query = [
+                sprintf('mimeType = "%s"', self::DOC_MIME_TYPE),
+            ];
 
-        return $fileList->getFiles();
+            $fileList = $service->files->listFiles([
+                'fields' => self::FIELDS,
+                'q' => implode(' AND ', $query),
+                'pageSize' => $limit,
+            ]);
+
+            return $fileList->getFiles();
+        });
     }
 
     public function getDocAsHTML(string $fileId): string
     {
-        $service = new Google_Service_Drive($this->client);
+        $cacheKey = json_encode([__METHOD__, $fileId]);
 
-        /** @var Response $file */
-        $file = $service->files->export(
-            $fileId,
-            'text/html',
-            [
-                'alt' => 'media',
-            ]
-        );
+        return $this->cached($cacheKey, function () use ($fileId) {
+            $service = new Google_Service_Drive($this->client);
 
-        return $file->getBody()->getContents();
+            /** @var Response $file */
+            $file = $service->files->export(
+                $fileId,
+                'text/html',
+                [
+                    'alt' => 'media',
+                ]
+            );
+
+            return $file->getBody()->getContents();
+        });
     }
 
     public function getFile(string $fileId): Google_Service_Drive_DriveFile
     {
-        $service = new Google_Service_Drive($this->client);
-        $file = $service->files->get($fileId);
+        $cacheKey = json_encode([__METHOD__, $fileId]);
 
-        return $file;
+        return $this->cached($cacheKey, function () use ($fileId) {
+            $service = new Google_Service_Drive($this->client);
+            $file = $service->files->get($fileId,
+                ['fields' => 'id, name, modifiedTime, parents, size']);
+
+            return $file;
+        });
     }
 }

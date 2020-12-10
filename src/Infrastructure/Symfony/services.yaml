@@ -25,3 +25,6 @@ services:
   Zantolov\ZoogleCms\Application\FindPosts\FindPostsInCategory: '@Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\PostRepository'
   Zantolov\ZoogleCms\Application\FindPosts\FindPost: '@Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\PostRepository'
   Zantolov\ZoogleCms\Application\FindPosts\FindUncategorizedPosts: '@Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\PostRepository'
+
+  Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\PostRepository: ~
+  Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Factory\PostFactory: ~

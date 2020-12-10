@@ -6,11 +6,8 @@ namespace Zantolov\ZoogleCms\Domain\Post;
 
 class Author
 {
-    public string $caption;
-
-    public function __construct(string $caption)
+    public function __construct(public string $caption)
     {
-        $this->caption = $caption;
     }
 
     public function equals(self $author): bool

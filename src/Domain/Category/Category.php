@@ -6,14 +6,12 @@ namespace Zantolov\ZoogleCms\Domain\Category;
 
 class Category
 {
-    public CategoryId $id;
-    public string $slug;
-    public ?CategoryId $parentId;
-
-    public function __construct(CategoryId $id, string $slug, ?CategoryId $parentId)
+    public function __construct(public CategoryId $id, public string $slug, public ?CategoryId $parentId)
     {
-        $this->id = $id;
-        $this->slug = $slug;
-        $this->parent = $parentId;
+    }
+
+    public function equals(self $category): bool
+    {
+        return $category->slug === $this->slug;
     }
 }

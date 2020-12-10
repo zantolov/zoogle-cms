@@ -15,20 +15,14 @@ use Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Client\GoogleDriveClient;
 use Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\ContentProcessing\MetadataProcessor;
 use Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\ContentProcessing\StyleRemover;
 
-class ArticleFactory
+class PostFactory
 {
-    private GoogleDriveClient $client;
-    private MetadataProcessor $metadataReader;
-    private CacheItemPoolInterface $cache;
-
     public function __construct(
-        GoogleDriveClient $client,
-        MetadataProcessor $metadataReader,
-        CacheItemPoolInterface $cache
+        private GoogleDriveClient $client,
+        private MetadataProcessor $metadataReader,
+        private CacheItemPoolInterface $cache,
+        private CategoryFactory $categoryFactory
     ) {
-        $this->client = $client;
-        $this->metadataReader = $metadataReader;
-        $this->cache = $cache;
     }
 
     /**
@@ -36,6 +30,12 @@ class ArticleFactory
      */
     public function make(Google_Service_Drive_DriveFile $file): Post
     {
+        $parentFolderId = $file['parents'][0] ?? null;
+        $category = null;
+        if (null !== $parentFolderId) {
+            $category = $this->categoryFactory->fromGoogleDriveFileId($parentFolderId);
+        }
+
         $html = $this->loadFileContent($file);
         $title = $this->metadataReader->extractTitle($html);
         $metadata = $this->metadataReader->extractMeta($html);
@@ -52,6 +52,7 @@ class ArticleFactory
             $html,
             $publishDateTime,
             $leadingImageUrl,
+            $category,
             $author
         );
     }

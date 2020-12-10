@@ -15,23 +15,18 @@ use Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Factory\CategoryFactory;
 
 final class CategoryRepository implements FindCategories, FindChildCategories, FindCategory
 {
-    /** @var Configuration */
-    private $configuration;
-
-    /** @var GoogleDriveClient */
-    private $client;
-
-    public function __construct(Configuration $configuration, GoogleDriveClient $client)
-    {
-        $this->configuration = $configuration;
-        $this->client = $client;
+    public function __construct(
+        private Configuration $configuration,
+        private GoogleDriveClient $client,
+        private CategoryFactory $categoryFactory
+    ) {
     }
 
     public function get(CategoryId $categoryId): Category
     {
         $googleDriveFile = $this->client->getFile($categoryId->value);
 
-        return (new CategoryFactory())->fromGoogleDriveFile($googleDriveFile);
+        return $this->categoryFactory->fromGoogleDriveFile($googleDriveFile);
     }
 
     /** @return Category[] */
@@ -41,7 +36,7 @@ final class CategoryRepository implements FindCategories, FindChildCategories, F
             $directories = [];
             $directChildren = $this->client->listDirectories($id->value);
             foreach ($directChildren as $directChild) {
-                $category = (new CategoryFactory())->fromGoogleDriveFile($directChild, $id->value);
+                $category = $this->categoryFactory->fromGoogleDriveFile($directChild, $id->value);
                 $directories[] = $category;
             }
 
@@ -53,7 +48,7 @@ final class CategoryRepository implements FindCategories, FindChildCategories, F
         $rootDirectories = $this->client->listRootDirectories();
 
         foreach ($rootDirectories as $rootDirectory) {
-            $category = (new CategoryFactory())->fromGoogleDriveFile($rootDirectory);
+            $category = $this->categoryFactory->fromGoogleDriveFile($rootDirectory);
             $categories[] = $category;
 
             $childrenCategories = $fetchChildrenCategories($category->id);
@@ -81,7 +76,7 @@ final class CategoryRepository implements FindCategories, FindChildCategories, F
         $directories = [];
         $directChildren = $this->client->listDirectories($category->id->value);
         foreach ($directChildren as $directChild) {
-            $category = (new CategoryFactory())->fromGoogleDriveFile($directChild, $id->value);
+            $category = $this->categoryFactory->fromGoogleDriveFile($directChild, $id->value);
             $directories[] = $category;
         }
 
