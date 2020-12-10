@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1c8291a1e273a88867fde7f1232ab05b",
+    "content-hash": "59e0a315fe8f1d1cd487bb10d3978112",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -70,6 +70,43 @@
                 "source": "https://github.com/beberlei/assert/tree/v3.3.0"
             },
             "time": "2020-11-13T20:02:54+00:00"
+        },
+        {
+            "name": "cocur/chain",
+            "version": "v0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cocur/chain.git",
+                "reference": "4d0a6e4fdee3b4aa53f0937f82e98d43320659a9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cocur/chain/zipball/4d0a6e4fdee3b4aa53f0937f82e98d43320659a9",
+                "reference": "4d0a6e4fdee3b4aa53f0937f82e98d43320659a9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Cocur\\Chain\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Consistent and chainable array manipulation",
+            "support": {
+                "issues": "https://github.com/cocur/chain/issues",
+                "source": "https://github.com/cocur/chain/tree/v0.9.0"
+            },
+            "time": "2020-07-19T15:36:22+00:00"
         },
         {
             "name": "firebase/php-jwt",
