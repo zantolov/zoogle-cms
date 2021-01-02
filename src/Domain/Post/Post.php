@@ -16,7 +16,8 @@ class Post
         public ?\DateTimeImmutable $publishingDateTime,
         public ?string $leadingImageUrl,
         public Category $category,
-        public ?Author $author
+        public ?Author $author,
+        public array $metadata = []
     ) {
     }
 
