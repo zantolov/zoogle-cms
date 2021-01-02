@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\ContentProcessing;
+namespace Zantolov\ZoogleCms\Domain\Document;
 
-class Metadata
+class Metadata implements DocumentElement
 {
     private array $values = [];
 
@@ -26,5 +26,10 @@ class Metadata
     public function has(string $key): bool
     {
         return array_key_exists($key, $this->values);
+    }
+
+    public function toString(): string
+    {
+        return json_encode($this->values);
     }
 }

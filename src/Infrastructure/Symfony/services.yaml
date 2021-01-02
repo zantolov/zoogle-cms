@@ -3,6 +3,10 @@ services:
     autowire: true      # Automatically injects dependencies in your services.
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
+  _instanceof:
+    \Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Content\Converting\GoogleDocs\ElementConverter:
+      tags: [ 'zoogle_document_converter' ]
+
   Zantolov\ZoogleCms\Infrastructure\:
     resource: '../*'
     exclude: '../{Symfony,GoogleDriveApi/Model,Migrations,Tests,Kernel.php}'
@@ -12,19 +16,38 @@ services:
       $authConfigPath: '%kernel.project_dir%/%env(GOOGLE_DRIVE_API_AUTH_FILE_PATH)%'
       $clientId: '%env(GOOGLE_DRIVE_API_CLIENT_ID)%'
 
+  Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Client\BaseGoogleDriveClient: ~
+  Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Client\CachedGoogleDriveClient:
+    arguments:
+      $client: '@Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Client\BaseGoogleDriveClient'
+
+  Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Client\GoogleDriveClientFactory: ~
+
+  Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Client\GoogleDriveClient:
+    factory: [ '@Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Client\GoogleDriveClientFactory', 'create' ]
+    arguments:
+      $useCache: '%env(bool:ZOOGLE_CACHE)%'
+
+  Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\:
+    resource: '../GoogleDriveAPI/Repository/*'
+
+  Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Factory\:
+    resource: '../GoogleDriveAPI/Factory/*'
+
   Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Configuration\Configuration:
     arguments:
       $rootDirectoryId: '%env(GOOGLE_DRIVE_ROOT_DIRECTORY_ID)%'
 
-  Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\CategoryRepository: ~
   Zantolov\ZoogleCms\Application\FindCategories\FindCategories: '@Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\CategoryRepository'
   Zantolov\ZoogleCms\Application\FindCategories\FindCategory: '@Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\CategoryRepository'
   Zantolov\ZoogleCms\Application\FindCategories\FindChildCategories: '@Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\CategoryRepository'
-
-  Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\PostRepository: ~
   Zantolov\ZoogleCms\Application\FindPosts\FindPostsInCategory: '@Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\PostRepository'
   Zantolov\ZoogleCms\Application\FindPosts\FindPost: '@Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\PostRepository'
   Zantolov\ZoogleCms\Application\FindPosts\FindUncategorizedPosts: '@Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\PostRepository'
 
-  Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\PostRepository: ~
-  Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Factory\PostFactory: ~
+  Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Content\:
+    resource: '../GoogleDriveAPI/Content/*'
+
+  Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Content\Converting\GoogleDocs\Converter:
+    arguments:
+      $converters: !tagged_iterator zoogle_document_converter

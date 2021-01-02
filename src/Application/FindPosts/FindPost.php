@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zantolov\ZoogleCms\Application\FindPosts;
 
 use Zantolov\ZoogleCms\Domain\Post\Post;
+use Zantolov\ZoogleCms\Domain\Post\PostId;
 
 interface FindPost
 {
@@ -15,5 +16,5 @@ interface FindPost
 
     public function findBySlug(string $slug): ?Post;
 
-    public function findById(string $id): ?Post;
+    public function findById(PostId $id): ?Post;
 }

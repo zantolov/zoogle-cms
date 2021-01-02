@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Zantolov\ZoogleCms\Domain\Category;
+namespace Zantolov\ZoogleCms\Domain\Document;
 
-final class CategoryId
+class Title implements DocumentElement
 {
     public function __construct(public string $value)
     {
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         return $this->value;
     }

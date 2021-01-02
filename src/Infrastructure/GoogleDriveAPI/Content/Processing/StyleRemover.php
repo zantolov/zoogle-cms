@@ -2,15 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\ContentProcessing;
+namespace Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Content\Processing;
 
 use DOMElement;
 use Symfony\Component\DomCrawler\Crawler;
+use Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Content\Processing\ProcessorInterface;
 
-final class StyleRemover
+final class StyleRemover implements ProcessorInterface
 {
     public function process(string $html): string
     {
+        // Remove empty tags
+        $regex = '/<([^>\s]+)[^>]*>(?:\s*(?:<br \/>|&nbsp;|&thinsp;|&ensp;|&emsp;|&#8201;|&#8194;|&#8195;)\s*)*<\/\1>/';
+        $html = preg_replace($regex, '', $html);
+
         $crawler = new Crawler($html);
         $crawler = $crawler->filter('body')->first();
 

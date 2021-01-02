@@ -19,4 +19,9 @@ class Post
         public ?Author $author
     ) {
     }
+
+    public function isPublished(\DateTimeInterface $now): bool
+    {
+        return $this->publishingDateTime !== null && $now >= $this->publishingDateTime;
+    }
 }

@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\ContentProcessing;
+namespace Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Content\Processing;
 
 use DOMElement;
 use Symfony\Component\DomCrawler\Crawler;
+use Zantolov\ZoogleCms\Domain\Document\Metadata;
 
 final class MetadataProcessor
 {
@@ -29,8 +30,11 @@ final class MetadataProcessor
     {
         $crawler = new Crawler($html);
         $titleNode = $crawler->filter('.title')->first();
-        $title = $titleNode->text();
+        if ($titleNode->count() === 0) {
+            return 'Untitled';
+        }
 
+        $title = $titleNode->text();
         $this->removeNode($titleNode->getNode(0));
         $html = $crawler->html();
 

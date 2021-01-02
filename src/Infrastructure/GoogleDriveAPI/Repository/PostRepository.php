@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository;
 
 use Cocur\Chain\Chain;
-use Psr\Cache\CacheItemPoolInterface;
 use Zantolov\ZoogleCms\Application\FindPosts\FindPost;
 use Zantolov\ZoogleCms\Application\FindPosts\FindPostsInCategory;
 use Zantolov\ZoogleCms\Application\FindPosts\FindUncategorizedPosts;
@@ -22,30 +21,21 @@ final class PostRepository implements FindPost, FindPostsInCategory, FindUncateg
     public function __construct(
         private Configuration $configuration,
         private GoogleDriveClient $client,
-        private PostFactory $postFactory,
-        private CacheItemPoolInterface $cache
+        private PostFactory $postFactory
     ) {
     }
 
-    private function isPublished(Post $post): bool
-    {
-        if (null === $post->publishingDateTime) {
-            return true;
-        }
-
-        return $post->publishingDateTime <= new \DateTimeImmutable();
-    }
-
-    private function sort(Post $a, Post $b): int
+    // @todo this has to be public so that it's accessible from the chain callback
+    public function sort(Post $a, Post $b): int
     {
         return $b->publishingDateTime <=> $a->publishingDateTime;
     }
 
     public function get(PostId $articleId): Post
     {
-        $doc = $this->client->getFile($articleId->value);
+        $file = $this->client->getFile($articleId->value);
 
-        return $this->postFactory->make($doc);
+        return $this->postFactory->make($file);
     }
 
     public function findInCategoryBySlug(CategoryId $categoryId, string $slug): ?Post
@@ -54,11 +44,7 @@ final class PostRepository implements FindPost, FindPostsInCategory, FindUncateg
         $match = Chain::create($files)
             ->find(fn ($file) => $slug === $file->getName());
 
-        if ($match) {
-            return $this->postFactory->make($match);
-        }
-
-        return null;
+        return $match ? $this->postFactory->make($match) : null;
     }
 
     public function findBySlug(string $slug): ?Post
@@ -67,18 +53,19 @@ final class PostRepository implements FindPost, FindPostsInCategory, FindUncateg
         $match = Chain::create($files)
             ->find(fn ($file) => $slug === $file->getName());
 
-        if ($match) {
-            return $this->postFactory->make($match);
-        }
-
-        return null;
+        return $match ? $this->postFactory->make($match) : null;
     }
 
-    public function findById(string $id): ?Post
+    public function findById(PostId $id): ?Post
     {
-        $file = $this->client->getFile($id);
+        try {
+            $this->get($id);
+            $file = $this->client->getFile($id->value);
 
-        return $this->postFactory->make($file);
+            return $this->postFactory->make($file);
+        } catch (Google\Exception $e) {
+            return null;
+        }
     }
 
     public function findByAuthor(Author $author): ?Post
@@ -87,16 +74,17 @@ final class PostRepository implements FindPost, FindPostsInCategory, FindUncateg
 
         return Chain::create($posts)
             ->filter(fn (Post $post) => null !== $post->author && $post->author->equals($author))
-            ->filter(fn (Post $post) => $this->isPublished($post))
+            ->filter(fn (Post $post) => $post->isPublished(new \DateTimeImmutable()))
             ->sort([$this, 'sort'])
-            ->values();
+            ->values()
+            ->array;
 
         return array_values($authorPosts);
     }
 
     public function findUncategorized(): array
     {
-        $topLevelCategory = new CategoryId($this->configuration->getRootDirectoryId());
+        $topLevelCategory = new CategoryId($this->configuration->rootDirectoryId);
 
         return $this->allInCategory($topLevelCategory);
     }
@@ -108,18 +96,20 @@ final class PostRepository implements FindPost, FindPostsInCategory, FindUncateg
         return Chain::create($files)
             ->map([$this->postFactory, 'make'])
             ->sort([$this, 'sort'])
-            ->filter(fn (Post $post) => $this->isPublished($post))
-            ->values();
+            ->filter(fn (Post $post) => $post->isPublished(new \DateTimeImmutable()))
+            ->values()
+            ->array;
     }
 
     public function all(): array
     {
-        $files = $this->client->listDocs($this->configuration->getRootDirectoryId());
+        $files = $this->client->listAllDocs();
 
         return Chain::create($files)
             ->map([$this->postFactory, 'make'])
             ->sort([$this, 'sort'])
-            ->filter(fn (Post $post) => $this->isPublished($post))
-            ->values();
+            ->filter(fn (Post $post) => $post->isPublished(new \DateTimeImmutable()))
+            ->values()
+            ->array;
     }
 }
