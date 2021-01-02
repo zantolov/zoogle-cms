@@ -12,6 +12,11 @@ class Category
 
     public function equals(self $category): bool
     {
-        return $category->slug === $this->slug;
+        return $this->hasSlug($category->slug);
+    }
+
+    public function hasSlug(string $slug): bool
+    {
+        return $slug === $this->slug;
     }
 }

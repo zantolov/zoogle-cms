@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Content\Converting\GoogleDocs;
+namespace Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Content\Converting\Document;
 
 use App\Domain\Document\Model\ContentElement;
 

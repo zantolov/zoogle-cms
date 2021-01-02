@@ -4,7 +4,7 @@ services:
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
   _instanceof:
-    \Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Content\Converting\GoogleDocs\ElementConverter:
+    \Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Content\Converting\Document\ElementConverter:
       tags: [ 'zoogle_document_converter' ]
 
   Zantolov\ZoogleCms\Infrastructure\:
@@ -48,6 +48,6 @@ services:
   Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Content\:
     resource: '../GoogleDriveAPI/Content/*'
 
-  Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Content\Converting\GoogleDocs\Converter:
+  Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Content\Converting\Document\Converter:
     arguments:
       $converters: !tagged_iterator zoogle_document_converter

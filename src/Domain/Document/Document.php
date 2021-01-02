@@ -36,4 +36,9 @@ class Document
             ->values()
             ->array;
     }
+
+    public function firstImage(): ?Image
+    {
+        return $this->getImages()[0] ?? null;
+    }
 }

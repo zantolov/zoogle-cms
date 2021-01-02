@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Content\Converting\GoogleDocs;
+namespace Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Content\Converting\Document;
 
 use Zantolov\ZoogleCms\Domain\Document\ListItem;
 use Zantolov\ZoogleCms\Domain\Document\Paragraph;
@@ -24,13 +24,9 @@ class ContentConverter extends AbstractContentElementConverter
             $nestingLevel = $bullet->getNestingLevel();
         }
 
-        $paragraphElements = array_map(
-            fn (\Google_Service_Docs_ParagraphElement $element) => $this->convertParagraphElement($element),
-            $paragraph->getElements()
-        );
-        $paragraphElements = array_filter($paragraphElements);
+        $paragraphElements = $this->convertParagraphElements($paragraph->getElements());
         if (empty($paragraphElements)) {
-            return [];
+            throw new \RuntimeException('Empty result set after conversion. Tweak the supports method');
         }
 
         // If the paragraph defines a list, wrap all the content in a ListItem that will later be joined in a list.
@@ -43,7 +39,23 @@ class ContentConverter extends AbstractContentElementConverter
 
     public function supports(\Google_Service_Docs_Paragraph $paragraph): bool
     {
-        return 'NORMAL_TEXT' === $paragraph->getParagraphStyle()?->getNamedStyleType();
+        return 'NORMAL_TEXT' === $paragraph->getParagraphStyle()?->getNamedStyleType()
+            && count($this->convertParagraphElements($paragraph->getElements())) > 0;
+    }
+
+    /**
+     * @param \Google_Service_Docs_ParagraphElement[] $elements
+     * @return array<int, Text|null>
+     */
+    private function convertParagraphElements(array $elements): array
+    {
+        $paragraphElements = array_map(
+            fn (\Google_Service_Docs_ParagraphElement $element) => $this->convertParagraphElement($element),
+            $elements
+        );
+        $paragraphElements = array_filter($paragraphElements);
+
+        return $paragraphElements;
     }
 
     private function convertParagraphElement(\Google_Service_Docs_ParagraphElement $element): ?Text

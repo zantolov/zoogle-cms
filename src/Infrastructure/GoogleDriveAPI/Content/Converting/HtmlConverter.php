@@ -91,13 +91,19 @@ class HtmlConverter
         }
 
         if ($item instanceof Image) {
-            // @todo
+            return sprintf(
+                '<img src="%s" alt="%s" data-description="%s"/>',
+                $item->src,
+                $item->alt,
+                $item->description
+            );
         }
 
         // Skip these elements from the content
         if ($item instanceof Metadata) {
             return '';
         }
+
         if ($item instanceof Title) {
             return '';
         }

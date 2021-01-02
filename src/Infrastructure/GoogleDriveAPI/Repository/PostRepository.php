@@ -95,8 +95,8 @@ final class PostRepository implements FindPost, FindPostsInCategory, FindUncateg
 
         return Chain::create($files)
             ->map([$this->postFactory, 'make'])
+            ->filter(fn (Post $post) => $post->isPublished(new \DateTimeImmutable('now')))
             ->sort([$this, 'sort'])
-            ->filter(fn (Post $post) => $post->isPublished(new \DateTimeImmutable()))
             ->values()
             ->array;
     }
@@ -107,8 +107,8 @@ final class PostRepository implements FindPost, FindPostsInCategory, FindUncateg
 
         return Chain::create($files)
             ->map([$this->postFactory, 'make'])
-            ->sort([$this, 'sort'])
             ->filter(fn (Post $post) => $post->isPublished(new \DateTimeImmutable()))
+            ->sort([$this, 'sort'])
             ->values()
             ->array;
     }
