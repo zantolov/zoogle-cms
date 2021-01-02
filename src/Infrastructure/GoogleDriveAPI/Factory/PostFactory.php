@@ -6,7 +6,6 @@ namespace Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Factory;
 
 use Cocur\Chain\Chain;
 use DateTimeImmutable;
-use Exception;
 use Zantolov\ZoogleCms\Domain\Document\Document;
 use Zantolov\ZoogleCms\Domain\Document\DocumentElement;
 use Zantolov\ZoogleCms\Domain\Document\Metadata;
@@ -29,7 +28,7 @@ class PostFactory
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function make(\Google_Service_Drive_DriveFile $file): Post
     {
@@ -65,7 +64,8 @@ class PostFactory
             $publishDateTime,
             $leadingImage?->src,
             $category,
-            $author
+            $author,
+            $metadata->all()
         );
     }
 }

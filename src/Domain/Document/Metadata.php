@@ -13,6 +13,11 @@ class Metadata implements DocumentElement
         $this->values = $values;
     }
 
+    public function all(): array
+    {
+        return $this->values;
+    }
+
     public function get(string $key)
     {
         return $this->values[$key] ?? null;
