@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Content\Converting\Document;
+namespace Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Content\Document\Converting;
 
 
 use Zantolov\ZoogleCms\Domain\Document\Heading;

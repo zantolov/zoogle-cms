@@ -8,22 +8,41 @@ use Cocur\Chain\Chain;
 
 class Document
 {
-    public function __construct(public array $items)
+    /**
+     * @param DocumentElement[] $elements
+     * @param DocumentList[] $lists
+     * @param InlineObject[] $objects
+     */
+    public function __construct(public string $id, public array $elements, public array $lists, public array $objects)
     {
+    }
+
+    public function getList(string $listId): ?DocumentList
+    {
+        return Chain::create($this->lists)
+            ->filter(fn (DocumentList $list) => $list->id === $listId)
+            ->first() ?: null;
+    }
+
+    public function getObject(string $objectId): ?DocumentObject
+    {
+        return Chain::create($this->objects)
+            ->filter(fn (DocumentObject $object) => $object->id === $objectId)
+            ->first() ?: null;
     }
 
     public function getTitle(): ?Title
     {
-        return Chain::create($this->items)
-                ->filter(fn (DocumentElement $element) => $element instanceof Title)
-                ->first() ?? null;
+        return Chain::create($this->elements)
+            ->filter(fn (DocumentElement $element) => $element instanceof Title)
+            ->first() ?: null;
     }
 
     public function getMetadata(): ?Metadata
     {
-        return Chain::create($this->items)
-                ->filter(fn (DocumentElement $element) => $element instanceof Metadata)
-                ->first() ?? null;
+        return Chain::create($this->elements)
+            ->filter(fn (DocumentElement $element) => $element instanceof Metadata)
+            ->first() ?: null;
     }
 
     /**
@@ -31,7 +50,7 @@ class Document
      */
     public function getImages(): array
     {
-        return Chain::create($this->items)
+        return Chain::create($this->elements)
             ->filter(fn (DocumentElement $element) => $element instanceof Image)
             ->values()
             ->array;
@@ -40,5 +59,13 @@ class Document
     public function firstImage(): ?Image
     {
         return $this->getImages()[0] ?? null;
+    }
+
+    public function withElements(array $elements): self
+    {
+        $instance = clone($this);
+        $instance->elements = $elements;
+
+        return $instance;
     }
 }

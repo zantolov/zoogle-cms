@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Content\Converting;
+namespace Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Content\Html\Converting;
 
 use Zantolov\ZoogleCms\Domain\Document\ContentElement;
 use Zantolov\ZoogleCms\Domain\Document\Document;
@@ -21,7 +21,7 @@ class HtmlConverter
     public function convert(Document $document): string
     {
         $string = '';
-        foreach ($document->items as $item) {
+        foreach ($document->elements as $item) {
             $string .= $this->renderItem($item);
         }
 
