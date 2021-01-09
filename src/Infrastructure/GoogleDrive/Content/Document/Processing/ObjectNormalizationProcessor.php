@@ -9,7 +9,7 @@ use Zantolov\ZoogleCms\Domain\Document\DocumentObject;
 use Zantolov\ZoogleCms\Domain\Document\Image;
 use Zantolov\ZoogleCms\Domain\Document\InlineObject;
 
-class ObjectNormalizationPass implements DocumentProcessor
+class ObjectNormalizationProcessor implements DocumentProcessor
 {
     public function process(Document $document): Document
     {

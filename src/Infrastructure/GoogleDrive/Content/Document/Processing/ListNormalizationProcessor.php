@@ -12,7 +12,7 @@ use Zantolov\ZoogleCms\Domain\Document\ListItem;
 /**
  * Groups all the ListItem objects to the DocumentList object, so that it can be handled as a group.
  */
-class ListNormalizationPass implements DocumentProcessor
+class ListNormalizationProcessor implements DocumentProcessor
 {
     public function process(Document $document): Document
     {

@@ -14,19 +14,29 @@ class CachedGoogleDriveClient implements GoogleDriveClient
     {
     }
 
+    private function commonCacheTag(): string
+    {
+        return 'zoogle';
+    }
+
     private function fileCacheTag(string $fileId): string
     {
         return 'file_'.$fileId;
     }
 
-    public function dirCacheTag(string $driveId): string
+    public function dirCacheTag(string $dirId): string
     {
-        return 'dir_'.$driveId;
+        return 'dir_'.$dirId;
     }
 
-    public function invalidateDriveCache(string $driveId): void
+    public function invalidateCache(): void
     {
-        $this->cache->invalidateTags([$this->dirCacheTag($driveId)]);
+        $this->cache->invalidateTags([$this->commonCacheTag()]);
+    }
+
+    public function invalidateDirCache(string $dir): void
+    {
+        $this->cache->invalidateTags([$this->dirCacheTag($dir)]);
     }
 
     public function invalidateFileCache(string $fileId): void
@@ -47,6 +57,7 @@ class CachedGoogleDriveClient implements GoogleDriveClient
             $data = $this->client->listDirectories($directoryId, $limit);
             $item->set($data);
             $item->expiresAfter(new \DateInterval('PT1H'));
+            $item->tag($this->commonCacheTag());
 
             return $data;
         });
@@ -61,6 +72,7 @@ class CachedGoogleDriveClient implements GoogleDriveClient
             $data = $this->client->listRootDirectories($limit);
             $item->set($data);
             $item->expiresAfter(new \DateInterval('PT1H'));
+            $item->tag($this->commonCacheTag());
 
             return $data;
         });
@@ -79,6 +91,7 @@ class CachedGoogleDriveClient implements GoogleDriveClient
             $data = $this->client->listDocs($directoryId, $limit);
             $item->set($data);
             $item->expiresAfter(new \DateInterval('PT1H'));
+            $item->tag($this->commonCacheTag());
 
             return $data;
         });
@@ -87,12 +100,13 @@ class CachedGoogleDriveClient implements GoogleDriveClient
     /** @return Google_Service_Drive_DriveFile[] */
     public function listAllDocs(int $limit = 1000): array
     {
-        $key = 'listAllDocs.limitx_'.$limit;
+        $key = 'listAllDocs.limit_'.$limit;
 
         return $this->cache->get($key, function (ItemInterface $item) use ($limit) {
             $data = $this->client->listAllDocs($limit);
             $item->set($data);
             $item->expiresAfter(new \DateInterval('PT1H'));
+            $item->tag($this->commonCacheTag());
 
             return $data;
         });
@@ -107,6 +121,7 @@ class CachedGoogleDriveClient implements GoogleDriveClient
             $item->tag($this->fileCacheTag($fileId));
             $item->set($data);
             $item->expiresAfter(new \DateInterval('PT1H'));
+            $item->tag($this->commonCacheTag());
 
             return $data;
         });
@@ -135,6 +150,7 @@ class CachedGoogleDriveClient implements GoogleDriveClient
             $data = $this->client->getFile($fileId);
             $item->set($data);
             $item->expiresAfter(new \DateInterval('PT1H'));
+            $item->tag($this->commonCacheTag());
 
             return $data;
         });
