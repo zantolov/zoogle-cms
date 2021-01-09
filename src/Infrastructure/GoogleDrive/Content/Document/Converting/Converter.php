@@ -70,7 +70,7 @@ class Converter
         $items = $header->getContent();
         $items = array_map(
             fn (\Google_Service_Docs_StructuralElement $element) => array_reduce(
-                array_column($this->generateElements($element), 0),
+                $this->generateElements($element),
                 fn (string $carry, DocumentElement $element) => $carry.$element->toString(),
                 ''
             ),
