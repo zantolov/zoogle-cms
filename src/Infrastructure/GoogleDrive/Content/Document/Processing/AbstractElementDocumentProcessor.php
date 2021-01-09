@@ -8,7 +8,7 @@ use src\Infrastructure\GoogleDrive\Content\Document\Processing\AbstractProcessin
 use Zantolov\ZoogleCms\Domain\Document\Document;
 use Zantolov\ZoogleCms\Domain\Document\DocumentElement;
 
-abstract class AbstractElementProcessingPass implements ProcessingPass
+abstract class AbstractElementDocumentProcessor implements DocumentProcessor
 {
     abstract protected function supports(DocumentElement $element): bool;
 

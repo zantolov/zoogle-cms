@@ -6,28 +6,15 @@ namespace Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Content\Document\Process
 
 use Zantolov\ZoogleCms\Domain\Document\Document;
 
-class DocumentProcessor
+interface DocumentProcessor
 {
-    private iterable $passes;
+    public function process(Document $document): Document;
 
     /**
-     * @param iterable<ProcessingPass> $passes
+     * Lower priority gets executed first.
+     * Useful for defining dependencies when one pass depends on another to be executed before it
+     * e.g. InlineObject to Image conversion before Image is persisted or postprocessed
+     * (otherwise there won't be Image elements at all)
      */
-    public function __construct(iterable $passes)
-    {
-        $passes = iterator_to_array($passes);
-        usort($passes, fn (ProcessingPass $pass1, ProcessingPass $pass2) => $pass1->priority() <=> $pass2->priority());
-        $this->passes = $passes;
-    }
-
-    public function process(Document $document): Document
-    {
-        $processedDocument = clone($document);
-
-        foreach ($this->passes as $pass) {
-            $processedDocument = $pass->process(clone($processedDocument));
-        }
-
-        return $processedDocument;
-    }
+    public function priority(): int;
 }

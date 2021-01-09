@@ -6,8 +6,10 @@ services:
   _instanceof:
     \Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Content\Document\Converting\ElementConverter:
       tags: [ 'zoogle_document_converter' ]
-    \Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Content\Document\Processing\ProcessingPass:
-      tags: [ 'zoogle_document_processing_pass' ]
+    \Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Content\Document\Processing\DocumentProcessor:
+      tags: [ 'zoogle_document_processor' ]
+    \Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Content\Html\Processing\HtmlProcessor:
+      tags: [ 'zoogle_html_processor' ]
 
   Zantolov\ZoogleCms\Infrastructure\:
     resource: '../*'
@@ -36,6 +38,10 @@ services:
     arguments:
       $converters: !tagged_iterator zoogle_document_converter
 
-  Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Content\Document\Processing\DocumentProcessor:
+  Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Content\Document\Processing\DocumentProcessingHub:
     arguments:
-      $passes: !tagged_iterator zoogle_document_processing_pass
+      $processors: !tagged_iterator zoogle_document_processor
+
+  Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Content\Html\Processing\HtmlProcessingHub:
+    arguments:
+      $processors: !tagged_iterator zoogle_html_processor
