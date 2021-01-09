@@ -93,6 +93,10 @@ class CachedGoogleDriveClient implements GoogleDriveClient
             $item->expiresAfter(new \DateInterval('PT1H'));
             $item->tag($this->commonCacheTag());
 
+            foreach ($data as $file) {
+                $item->tag($this->fileCacheTag($file->getId()));
+            }
+
             return $data;
         });
     }
@@ -107,6 +111,29 @@ class CachedGoogleDriveClient implements GoogleDriveClient
             $item->set($data);
             $item->expiresAfter(new \DateInterval('PT1H'));
             $item->tag($this->commonCacheTag());
+
+            foreach ($data as $file) {
+                $item->tag($this->fileCacheTag($file->getId()));
+            }
+
+            return $data;
+        });
+    }
+
+    /** @return Google_Service_Drive_DriveFile[] */
+    public function searchDocs(string $query, int $limit = 1000): array
+    {
+        $key = 'listAllDocs.limit_'.$limit.'.query_'.$query;
+
+        return $this->cache->get($key, function (ItemInterface $item) use ($query, $limit) {
+            $data = $this->client->searchDocs($query, $limit);
+            $item->set($data);
+            $item->expiresAfter(new \DateInterval('PT1H'));
+            $item->tag($this->commonCacheTag());
+
+            foreach ($data as $file) {
+                $item->tag($this->fileCacheTag($file->getId()));
+            }
 
             return $data;
         });

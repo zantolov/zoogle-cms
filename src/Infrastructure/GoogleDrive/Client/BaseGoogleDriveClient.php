@@ -130,6 +130,29 @@ class BaseGoogleDriveClient implements GoogleDriveClient
         });
     }
 
+    /** @return \Google_Service_Drive_DriveFile[] */
+    public function searchDocs(string $query, int $limit = 1000): array
+    {
+        $cacheKey = json_encode([__METHOD__, $limit, $query]);
+
+        return $this->cached($cacheKey, function () use ($query, $limit) {
+            $service = new Google_Service_Drive($this->client);
+
+            $query = [
+                sprintf('mimeType = "%s"', self::DOC_MIME_TYPE),
+                sprintf('(name contains "%s" OR fullText contains "%s")', $query, $query),
+            ];
+
+            $fileList = $service->files->listFiles([
+                'fields' => self::FIELDS,
+                'q' => implode(' AND ', $query),
+                'pageSize' => $limit,
+            ]);
+
+            return $fileList->getFiles();
+        });
+    }
+
     public function getDocAsHTML(string $fileId): string
     {
         $cacheKey = json_encode([__METHOD__, $fileId]);
