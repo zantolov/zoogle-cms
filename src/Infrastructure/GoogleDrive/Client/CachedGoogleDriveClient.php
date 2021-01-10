@@ -56,7 +56,6 @@ class CachedGoogleDriveClient implements GoogleDriveClient
 
             $data = $this->client->listDirectories($directoryId, $limit);
             $item->set($data);
-            $item->expiresAfter(new \DateInterval('PT1H'));
             $item->tag($this->commonCacheTag());
 
             return $data;
@@ -71,7 +70,6 @@ class CachedGoogleDriveClient implements GoogleDriveClient
         return $this->cache->get($key, function (ItemInterface $item) use ($limit) {
             $data = $this->client->listRootDirectories($limit);
             $item->set($data);
-            $item->expiresAfter(new \DateInterval('PT1H'));
             $item->tag($this->commonCacheTag());
 
             return $data;
@@ -90,7 +88,6 @@ class CachedGoogleDriveClient implements GoogleDriveClient
 
             $data = $this->client->listDocs($directoryId, $limit);
             $item->set($data);
-            $item->expiresAfter(new \DateInterval('PT1H'));
             $item->tag($this->commonCacheTag());
 
             foreach ($data as $file) {
@@ -109,7 +106,6 @@ class CachedGoogleDriveClient implements GoogleDriveClient
         return $this->cache->get($key, function (ItemInterface $item) use ($limit) {
             $data = $this->client->listAllDocs($limit);
             $item->set($data);
-            $item->expiresAfter(new \DateInterval('PT1H'));
             $item->tag($this->commonCacheTag());
 
             foreach ($data as $file) {
@@ -128,7 +124,6 @@ class CachedGoogleDriveClient implements GoogleDriveClient
         return $this->cache->get($key, function (ItemInterface $item) use ($query, $limit) {
             $data = $this->client->searchDocs($query, $limit);
             $item->set($data);
-            $item->expiresAfter(new \DateInterval('PT1H'));
             $item->tag($this->commonCacheTag());
 
             foreach ($data as $file) {
@@ -146,9 +141,8 @@ class CachedGoogleDriveClient implements GoogleDriveClient
         return $this->cache->get($key, function (ItemInterface $item) use ($fileId) {
             $data = $this->client->getDoc($fileId);
             $item->tag($this->fileCacheTag($fileId));
-            $item->set($data);
-            $item->expiresAfter(new \DateInterval('PT1H'));
             $item->tag($this->commonCacheTag());
+            $item->set($data);
 
             return $data;
         });
@@ -160,9 +154,9 @@ class CachedGoogleDriveClient implements GoogleDriveClient
 
         return $this->cache->get($key, function (ItemInterface $item) use ($fileId) {
             $item->tag($this->fileCacheTag($fileId));
+            $item->tag($this->commonCacheTag());
             $data = $this->client->getDocAsHTML($fileId);
             $item->set($data);
-            $item->expiresAfter(new \DateInterval('PT1H'));
 
             return $data;
         });
@@ -174,10 +168,9 @@ class CachedGoogleDriveClient implements GoogleDriveClient
 
         return $this->cache->get($key, function (ItemInterface $item) use ($fileId) {
             $item->tag($this->fileCacheTag($fileId));
+            $item->tag($this->commonCacheTag());
             $data = $this->client->getFile($fileId);
             $item->set($data);
-            $item->expiresAfter(new \DateInterval('PT1H'));
-            $item->tag($this->commonCacheTag());
 
             return $data;
         });
