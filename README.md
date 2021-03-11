@@ -39,9 +39,15 @@ GOOGLE_DRIVE_API_AUTH_FILE_PATH=/var/auth.json
 GOOGLE_DRIVE_ROOT_DIRECTORY_ID=YOUR ROOT DIRECTORY ID
 ```
 
-- `GOOGLE_DRIVE_API_CLIENT_ID` Client ID value from the authorization JSON file you have downloaded
+- `GOOGLE_DRIVE_API_CLIENT_ID` The `client_id` value from the authorization JSON file you have downloaded
 - `GOOGLE_DRIVE_API_AUTH_FILE_PATH` - path to the JSON credentials file downloaded while creating the service account
 - `GOOGLE_DRIVE_ROOT_DIRECTORY_ID` - ID of the Google Drive folder that will be root for the CMS
+
+### How to get the root directory ID?
+
+- Create a folder on your Google Drive and open it with the browser
+- See your URL in the following format: `https://drive.google.com/drive/u/0/folders/1123456AbCDeFGhIjKlMnB12233`
+- The last URL component is the folder ID, `https://drive.google.com/drive/u/0/folders/{id}`
 
 ## 5. Grant access on the Google Drive root folder to the service account email
 
