@@ -3,19 +3,45 @@ services:
     autowire: true      # Automatically injects dependencies in your services.
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
+  _instanceof:
+    \Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Content\Document\Converting\ElementConverter:
+      tags: [ 'zoogle_document_converter' ]
+    \Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Content\Document\Processing\DocumentProcessor:
+      tags: [ 'zoogle_document_processor' ]
+    \Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Content\Html\Processing\HtmlProcessor:
+      tags: [ 'zoogle_html_processor' ]
+
   Zantolov\ZoogleCms\Infrastructure\:
     resource: '../*'
-    exclude: '../{Symfony,GoogleDriveApi/Model,Migrations,Tests,Kernel.php}'
 
-  Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Client\GoogleDriveAuth:
+  Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Client\GoogleDriveAuth:
     arguments:
       $authConfigPath: '%kernel.project_dir%/%env(GOOGLE_DRIVE_API_AUTH_FILE_PATH)%'
       $clientId: '%env(GOOGLE_DRIVE_API_CLIENT_ID)%'
 
-  Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Configuration\Configuration:
+  Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Client\CachedGoogleDriveClient:
+    arguments:
+      $client: '@Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Client\BaseGoogleDriveClient'
+
+  Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Client\GoogleDriveClientFactory: ~
+
+  Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Client\GoogleDriveClient:
+    factory: [ '@Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Client\GoogleDriveClientFactory', 'create' ]
+    arguments:
+      $useCache: '%env(bool:ZOOGLE_CACHE)%'
+
+  Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Configuration\Configuration:
     arguments:
       $rootDirectoryId: '%env(GOOGLE_DRIVE_ROOT_DIRECTORY_ID)%'
 
-  Zantolov\ZoogleCms\Domain\CategoryRepository: '@Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\CategoryRepository'
-  Zantolov\ZoogleCms\Domain\ArticleRepository: '@Zantolov\ZoogleCms\Infrastructure\GoogleDriveAPI\Repository\ArticleRepository'
+  Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Content\Document\Converting\Converter:
+    arguments:
+      $converters: !tagged_iterator zoogle_document_converter
 
+  Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Content\Document\Processing\DocumentProcessingHub:
+    arguments:
+      $processors: !tagged_iterator zoogle_document_processor
+
+  Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Content\Html\Processing\HtmlProcessingHub:
+    arguments:
+      $processors: !tagged_iterator zoogle_html_processor
