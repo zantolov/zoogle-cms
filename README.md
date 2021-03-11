@@ -22,12 +22,14 @@ Edit `config/bundles.php` and add:
 Zantolov\ZoogleCms\Infrastructure\Symfony\ZoogleCmsBundle::class => ['all' => true]
 ```
 
-## 3. Obtaing Google API credentials JSON file
+## 3. Obtaing Google API credentials
 - Go to https://console.developers.google.com/iam-admin/serviceaccounts
 - Create project or select existing one
 - Click on `Create service account`
 - Add permission to this service account as `Owner`
 - Create JSON key for the service account and download it to `var/` (it will be needed later) 
+- Enable Google Drive API
+- Enable Google Docs API
 
 ## 4. Set-up required environment variables
 
