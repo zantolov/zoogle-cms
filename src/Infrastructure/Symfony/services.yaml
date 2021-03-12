@@ -14,6 +14,9 @@ services:
   Zantolov\ZoogleCms\Infrastructure\:
     resource: '../*'
 
+  Zantolov\ZoogleCms\Infrastructure\Controller\ImageController:
+    tags: [ 'controller.service_arguments' ]
+
   Zantolov\ZoogleCms\Infrastructure\GoogleDrive\Client\GoogleDriveAuth:
     arguments:
       $authConfigPath: '%kernel.project_dir%/%env(GOOGLE_DRIVE_API_AUTH_FILE_PATH)%'

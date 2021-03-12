@@ -68,4 +68,14 @@ class Document
 
         return $instance;
     }
+
+    public function withoutFirstImage(): self
+    {
+        $items = Chain::create($this->elements)
+            ->filter(fn (DocumentElement $element) => $element !== $this->firstImage())
+            ->values()
+            ->array;
+
+        return $this->withElements($items);
+    }
 }

@@ -28,7 +28,7 @@ class HtmlConverter
         return $string;
     }
 
-    private function renderItem(DocumentElement $item): string
+    public function renderItem(DocumentElement $item): string
     {
         if ($item instanceof Heading) {
             return sprintf('<h%s>%s</h%s>', $item->level, $item->value, $item->level);
