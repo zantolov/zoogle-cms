@@ -39,11 +39,20 @@ Create local, untracked `.env` instance (e.g. `.env.dev.local`) and fill in the 
 GOOGLE_DRIVE_API_CLIENT_ID=YOUR CLIENT ID
 GOOGLE_DRIVE_API_AUTH_FILE_PATH=/var/auth.json
 GOOGLE_DRIVE_ROOT_DIRECTORY_ID=YOUR ROOT DIRECTORY ID
+ZOOGLE_CACHE=1
 ```
 
 - `GOOGLE_DRIVE_API_CLIENT_ID` The `client_id` value from the authorization JSON file you have downloaded
 - `GOOGLE_DRIVE_API_AUTH_FILE_PATH` - path to the JSON credentials file downloaded while creating the service account
 - `GOOGLE_DRIVE_ROOT_DIRECTORY_ID` - ID of the Google Drive folder that will be root for the CMS
+- `ZOOGLE_CACHE` - Configuration flag telling Zoogle to cache results or not
+
+### Caching
+Fetching and processing documents on every request is tedious job. Zoogle CMS provides cached
+client that will fetch and process content only once, storing it locally for future access and 
+faster loading time.
+
+@todo cache invalidation
 
 ### How to get the root directory ID?
 
@@ -55,3 +64,50 @@ GOOGLE_DRIVE_ROOT_DIRECTORY_ID=YOUR ROOT DIRECTORY ID
 
 - Right click on the root folder in your Google drive and select "Share"
 - Add the email contained in the JSON credentials file under the `client_email` key to the list of users the folder is shared with. View permission is enough
+
+## Usage
+
+Once you've successfully shared Google Drive folder with the account associated to your Google project,
+Zoogle CMS will have access to folders and documents under the selected root directory.
+
+### Simple usage within Twig
+```
+{% set document = zoogle_document('https://docs.google.com/document/d/{some id}/edit') %}
+
+<h1>{{ document.title }}</h1>
+
+<div class="page__image">
+    {{ document.firstImage|zoogle_element_html }}
+</div>
+
+{{ document.withoutFirstImage|zoogle_document_html }}
+```
+
+### Usage within PHP
+#### Listing subfolders
+#### Listing documents
+#### Fetching document
+##### Converting Google document to model object
+##### Converting document model object to HTML
+
+## Configurartion
+
+### Images persistence
+By default images exposed by Google Docs API will expire. To make sure images will keep rendering
+on your website, we need to persist them.
+
+Zoogle comes with the local persistence adapter powered by Symfony Cache component
+
+To enable it, add the following route definition to your `app/config/routes.yaml`
+
+```yaml
+zoogle_cms_image:
+    path: /z/image/{filename}
+    controller: Zantolov\ZoogleCms\Infrastructure\Controller\ImageController
+```
+
+#### Amazon S3 images persistence
+@todo
+
+#### Custom persistence
+@todo
