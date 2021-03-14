@@ -13,6 +13,7 @@ use Zantolov\ZoogleCms\Domain\Document\Image;
 use Zantolov\ZoogleCms\Domain\Document\ListItem;
 use Zantolov\ZoogleCms\Domain\Document\Metadata;
 use Zantolov\ZoogleCms\Domain\Document\Paragraph;
+use Zantolov\ZoogleCms\Domain\Document\Subtitle;
 use Zantolov\ZoogleCms\Domain\Document\Text;
 use Zantolov\ZoogleCms\Domain\Document\Title;
 
@@ -102,6 +103,10 @@ class HtmlConverter
         }
 
         if ($item instanceof Title) {
+            return '';
+        }
+
+        if ($item instanceof Subtitle) {
             return '';
         }
 

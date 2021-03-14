@@ -38,6 +38,13 @@ class Document
             ->first() ?: null;
     }
 
+    public function getSubtitle(): ?Subtitle
+    {
+        return Chain::create($this->elements)
+            ->filter(fn (DocumentElement $element) => $element instanceof Subtitle)
+            ->first() ?: null;
+    }
+
     public function getMetadata(): ?Metadata
     {
         return Chain::create($this->elements)
