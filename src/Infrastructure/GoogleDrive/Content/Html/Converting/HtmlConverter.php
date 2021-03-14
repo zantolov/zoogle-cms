@@ -37,7 +37,7 @@ class HtmlConverter
 
         if ($item instanceof Text) {
             $value = $item->value;
-            $value = rtrim($value, " \t\n\r\0\x0B\v");
+            $value = rtrim($value, "\v");
             $value = str_replace("\v", '<br/>', $value);
 
             if ($item->link) {
