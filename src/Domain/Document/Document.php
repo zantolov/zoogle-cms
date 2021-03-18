@@ -63,6 +63,17 @@ class Document
             ->array;
     }
 
+    /**
+     * @return Paragraph[]
+     */
+    public function getParagraphs(): array
+    {
+        return Chain::create($this->elements)
+            ->filter(fn (DocumentElement $element) => $element instanceof Paragraph)
+            ->values()
+            ->array;
+    }
+
     public function firstImage(): ?Image
     {
         return $this->getImages()[0] ?? null;
