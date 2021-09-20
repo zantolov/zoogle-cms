@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Model\Document;
 
-class Text implements DocumentElement
+final class Text implements DocumentElement
 {
-    // @todo add support for strikethrough, smallCaps
-
+    /** @todo add support for strikethrough, smallCaps */
     public function __construct(
         public string $value,
         public bool $bold = false,

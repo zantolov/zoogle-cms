@@ -8,10 +8,9 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Zantolov\ZoogleCms\Model\Document\Document;
 use Zantolov\ZoogleCms\Model\Document\DocumentElement;
-use Zantolov\ZoogleCms\Model\Document\Image;
 use Zantolov\ZoogleCms\Model\Document\Image as ImageElement;
 
-class LocalImagePersistenceProcessor extends AbstractElementDocumentProcessor
+final class LocalImagePersistenceProcessor extends AbstractElementDocumentProcessor
 {
     public function __construct(private CacheInterface $cache, private RouterInterface $router)
     {
@@ -36,9 +35,7 @@ class LocalImagePersistenceProcessor extends AbstractElementDocumentProcessor
         $extension = $pathParts['extension'] ?? 'jpg';
         $filename = sprintf('%s.%s', $imageHash, $extension);
 
-        $cachedItem = $this->cache->get($filename, function () use ($filename, $element) {
-            return file_get_contents($element->src);
-        });
+        $cachedItem = $this->cache->get($filename, static fn () => file_get_contents($element->src));
 
         $proxyedImageUrl = $this->router->generate(
             'zoogle_cms_image',

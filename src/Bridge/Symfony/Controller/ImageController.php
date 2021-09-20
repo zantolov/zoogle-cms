@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ImageController extends AbstractController
+final class ImageController extends AbstractController
 {
     /**
      * @Route("/z/image/{filename}", name="zoogle_cms_local_image")
@@ -27,7 +27,7 @@ class ImageController extends AbstractController
         $disposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $filename);
         $response->headers->set('Content-Disposition', $disposition);
         $response->headers->set('Content-Type', 'image');
-        $response->setExpires(new \DateTime('+1 year'));
+        $response->setExpires(new \DateTimeImmutable('+1 year'));
 
         return $response;
     }

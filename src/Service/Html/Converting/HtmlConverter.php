@@ -16,7 +16,7 @@ use Zantolov\ZoogleCms\Model\Document\Subtitle;
 use Zantolov\ZoogleCms\Model\Document\Text;
 use Zantolov\ZoogleCms\Model\Document\Title;
 
-class HtmlConverter
+final class HtmlConverter
 {
     public function convert(Document $document): string
     {

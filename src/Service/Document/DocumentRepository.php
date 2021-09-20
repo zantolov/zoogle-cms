@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Service\Document;
 
-use Zantolov\ZoogleCms\Service\GoogleDrive\Client\GoogleDriveClient;
+use Zantolov\ZoogleCms\Model\Document\Document;
 use Zantolov\ZoogleCms\Service\Document\Converting\Converter;
 use Zantolov\ZoogleCms\Service\Document\Processing\DocumentProcessingHub;
-use Zantolov\ZoogleCms\Model\Document\Document;
+use Zantolov\ZoogleCms\Service\GoogleDrive\Client\GoogleDriveClient;
 
-class DocumentRepository
+final class DocumentRepository
 {
     public function __construct(
         private GoogleDriveClient $client,

@@ -9,7 +9,7 @@ use Zantolov\ZoogleCms\Model\Document\DocumentObject;
 use Zantolov\ZoogleCms\Model\Document\Image;
 use Zantolov\ZoogleCms\Model\Document\InlineObject;
 
-class ObjectNormalizationProcessor implements DocumentProcessor
+final class ObjectNormalizationProcessor implements DocumentProcessor
 {
     public function process(Document $document): Document
     {
@@ -36,7 +36,7 @@ class ObjectNormalizationProcessor implements DocumentProcessor
     private function convertInlineObjectToImage(\Google_Service_Docs_Document $document, InlineObject $object): ?Image
     {
         $objects = $document->getInlineObjects();
-        /** @var  \Google_Service_Docs_InlineObject $documentObject */
+        /** @var \Google_Service_Docs_InlineObject $documentObject */
         foreach ($objects as $id => $documentObject) {
             if ($id === $object->id && $documentObject->getInlineObjectProperties()?->getEmbeddedObject()) {
                 $embeddedObject = $documentObject->getInlineObjectProperties()?->getEmbeddedObject();
@@ -48,7 +48,7 @@ class ObjectNormalizationProcessor implements DocumentProcessor
                 // @todo add support for cropped content
                 // @todo add support for drawings
 
-                if (null !== $imageSrc) {
+                if ($imageSrc !== null) {
                     return new Image($documentObject->getObjectId(), $imageSrc, $alt, $description);
                 }
             }

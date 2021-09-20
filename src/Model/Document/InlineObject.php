@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Zantolov\ZoogleCms\Model\Document;
 
 /**
- * Inline reference to an object. Can be rendered only from the data stored in DocumentObject on the Document level
+ * Inline reference to an object. Can be rendered only from the data stored in DocumentObject on the Document level.
  */
-class InlineObject implements DocumentElement
+final class InlineObject implements DocumentElement
 {
     public function __construct(public string $id)
     {

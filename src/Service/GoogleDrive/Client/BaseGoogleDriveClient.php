@@ -10,7 +10,7 @@ use Google_Service_Drive;
 use GuzzleHttp\Psr7\Response;
 use Zantolov\ZoogleCms\Service\GoogleDrive\Configuration\Configuration;
 
-class BaseGoogleDriveClient implements GoogleDriveClient
+final class BaseGoogleDriveClient implements GoogleDriveClient
 {
     private const FIELDS = 'files(*)';
     private const DOC_MIME_TYPE = 'application/vnd.google-apps.document';
@@ -27,10 +27,10 @@ class BaseGoogleDriveClient implements GoogleDriveClient
     private function initializeClient(): void
     {
         $this->client = new Google_Client();
-        $this->client->setApplicationName("Client_Library_Examples");
+        $this->client->setApplicationName('Client_Library_Examples');
         $this->client->setScopes([
             Google_Service_Drive::DRIVE_READONLY,
-            Google_Service_Docs::DOCUMENTS_READONLY
+            Google_Service_Docs::DOCUMENTS_READONLY,
         ]);
         $this->client->setClientId($this->auth->getClientId());
         $this->client->setAuthConfig($this->auth->getAuthConfig());
@@ -39,7 +39,7 @@ class BaseGoogleDriveClient implements GoogleDriveClient
     private function cached(string $key, callable $callback)
     {
         $cachedData = $this->cache[$key] ?? null;
-        if (null !== $cachedData) {
+        if ($cachedData !== null) {
             return $cachedData;
         }
 
@@ -61,7 +61,7 @@ class BaseGoogleDriveClient implements GoogleDriveClient
                 sprintf('mimeType = "%s"', self::FOLDER_MIME_TYPE),
             ];
 
-            if (null !== $directoryId) {
+            if ($directoryId !== null) {
                 $query[] = sprintf('"%s" in parents', $directoryId);
             }
 
@@ -80,9 +80,7 @@ class BaseGoogleDriveClient implements GoogleDriveClient
     {
         $cacheKey = json_encode([__METHOD__, $limit]);
 
-        return $this->cached($cacheKey, function () use ($limit) {
-            return $this->listDirectories($this->configuration->rootDirectoryId, $limit);
-        });
+        return $this->cached($cacheKey, fn () => $this->listDirectories($this->configuration->rootDirectoryId, $limit));
     }
 
     /** @return \Google_Service_Drive_DriveFile[] */
@@ -179,12 +177,11 @@ class BaseGoogleDriveClient implements GoogleDriveClient
 
         return $this->cached($cacheKey, function () use ($fileId) {
             $service = new Google_Service_Drive($this->client);
-            $file = $service->files->get(
+
+            return $service->files->get(
                 $fileId,
                 ['fields' => 'id, name, modifiedTime, parents, size']
             );
-
-            return $file;
         });
     }
 
@@ -192,7 +189,7 @@ class BaseGoogleDriveClient implements GoogleDriveClient
     {
         $service = new \Google_Service_Docs($this->client);
 
-        return $service->documents->get($fileId,);
+        return $service->documents->get($fileId, );
     }
 
     /**

@@ -9,7 +9,13 @@ use Zantolov\ZoogleCms\Model\Document\Document;
 use Zantolov\ZoogleCms\Service\Document\Processing\DocumentProcessingHub;
 use Zantolov\ZoogleCms\Service\Document\Processing\DocumentProcessor;
 
-class DocumentProcessingHubTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ *
+ * @small
+ */
+final class DocumentProcessingHubTest extends TestCase
 {
     public function test_it_sorts_processors_by_priority(): void
     {
@@ -18,7 +24,7 @@ class DocumentProcessingHubTest extends TestCase
         $processor1->expects($this->atLeastOnce())->method('priority')->willReturn(1);
         $processor1->expects($this->once())
             ->method('process')
-            ->willReturnCallback(function (Document $document) use (&$executionOrder) {
+            ->willReturnCallback(static function (Document $document) use (&$executionOrder) {
                 $executionOrder[] = 1;
 
                 return $document;
@@ -27,7 +33,7 @@ class DocumentProcessingHubTest extends TestCase
         $processor2->expects($this->atLeastOnce())->method('priority')->willReturn(2);
         $processor2->expects($this->once())
             ->method('process')
-            ->willReturnCallback(function (Document $document) use (&$executionOrder) {
+            ->willReturnCallback(static function (Document $document) use (&$executionOrder) {
                 $executionOrder[] = 2;
 
                 return $document;
@@ -36,7 +42,7 @@ class DocumentProcessingHubTest extends TestCase
         $processor3->expects($this->atLeastOnce())->method('priority')->willReturn(3);
         $processor3->expects($this->once())
             ->method('process')
-            ->willReturnCallback(function (Document $document) use (&$executionOrder) {
+            ->willReturnCallback(static function (Document $document) use (&$executionOrder) {
                 $executionOrder[] = 3;
 
                 return $document;

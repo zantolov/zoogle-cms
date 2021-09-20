@@ -8,7 +8,7 @@ use Google_Service_Drive_DriveFile;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
-class CachedGoogleDriveClient implements GoogleDriveClient
+final class CachedGoogleDriveClient implements GoogleDriveClient
 {
     public function __construct(private GoogleDriveClient $client, private TagAwareCacheInterface $cache)
     {
@@ -162,7 +162,7 @@ class CachedGoogleDriveClient implements GoogleDriveClient
         });
     }
 
-    public function getFile(string $fileId): \Google_Service_Drive_DriveFile
+    public function getFile(string $fileId): Google_Service_Drive_DriveFile
     {
         $key = 'getFile.file_'.$fileId;
 
@@ -176,7 +176,7 @@ class CachedGoogleDriveClient implements GoogleDriveClient
         });
     }
 
-    public function findByName(string $name): ?\Google_Service_Drive_DriveFile
+    public function findByName(string $name): ?Google_Service_Drive_DriveFile
     {
         $key = 'getFile.file_name_'.$name;
 

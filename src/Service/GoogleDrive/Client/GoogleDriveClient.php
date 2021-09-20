@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Service\GoogleDrive\Client;
 
-
 interface GoogleDriveClient
 {
     /** @return \Google_Service_Drive_DriveFile[] */

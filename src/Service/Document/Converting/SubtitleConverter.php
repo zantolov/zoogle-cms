@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Service\Document\Converting;
 
-
 use Zantolov\ZoogleCms\Model\Document\Subtitle;
 use Zantolov\ZoogleCms\Model\Document\Title;
 
 /**
  * @internal
  */
-class SubtitleConverter extends AbstractContentElementConverter
+final class SubtitleConverter extends AbstractContentElementConverter
 {
     /** @return Title[] */
     public function convert(\Google_Service_Docs_Paragraph $paragraph): array
@@ -23,6 +22,6 @@ class SubtitleConverter extends AbstractContentElementConverter
 
     public function supports(\Google_Service_Docs_Paragraph $paragraph): bool
     {
-        return 'SUBTITLE' === $paragraph->getParagraphStyle()?->getNamedStyleType();
+        return $paragraph->getParagraphStyle()?->getNamedStyleType() === 'SUBTITLE';
     }
 }

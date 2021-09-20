@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Model\Document;
 
-class DocumentObject implements DocumentElement
+final class DocumentObject implements DocumentElement
 {
     public const TYPE_IMAGE = 'image';
 

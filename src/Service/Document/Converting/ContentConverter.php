@@ -11,7 +11,7 @@ use Zantolov\ZoogleCms\Model\Document\Text;
 /**
  * @internal
  */
-class ContentConverter extends AbstractContentElementConverter
+final class ContentConverter extends AbstractContentElementConverter
 {
     /** @return ContentElement[] */
     public function convert(\Google_Service_Docs_Paragraph $paragraph): array
@@ -30,7 +30,7 @@ class ContentConverter extends AbstractContentElementConverter
         }
 
         // If the paragraph defines a list, wrap all the content in a ListItem that will later be joined in a list.
-        if (null !== $listId) {
+        if ($listId !== null) {
             return [new ListItem($listId, $paragraphElements, $nestingLevel ?? 1)];
         }
 
@@ -39,13 +39,14 @@ class ContentConverter extends AbstractContentElementConverter
 
     public function supports(\Google_Service_Docs_Paragraph $paragraph): bool
     {
-        return 'NORMAL_TEXT' === $paragraph->getParagraphStyle()?->getNamedStyleType()
-            && count($this->convertParagraphElements($paragraph->getElements())) > 0;
+        return $paragraph->getParagraphStyle()?->getNamedStyleType() === 'NORMAL_TEXT'
+            && \count($this->convertParagraphElements($paragraph->getElements())) > 0;
     }
 
     /**
      * @param \Google_Service_Docs_ParagraphElement[] $elements
-     * @return array<int, Text|null>
+     *
+     * @return array<int, null|Text>
      */
     private function convertParagraphElements(array $elements): array
     {
@@ -53,9 +54,8 @@ class ContentConverter extends AbstractContentElementConverter
             fn (\Google_Service_Docs_ParagraphElement $element) => $this->convertParagraphElement($element),
             $elements
         );
-        $paragraphElements = array_filter($paragraphElements);
 
-        return $paragraphElements;
+        return array_filter($paragraphElements);
     }
 
     private function convertParagraphElement(\Google_Service_Docs_ParagraphElement $element): ?Text
@@ -63,7 +63,7 @@ class ContentConverter extends AbstractContentElementConverter
         // Skip empty content
         $textRun = $element->getTextRun();
         $content = $textRun?->getContent();
-        if (null === $textRun || empty(trim($content))) {
+        if ($textRun === null || empty(trim($content))) {
             return null;
         }
 

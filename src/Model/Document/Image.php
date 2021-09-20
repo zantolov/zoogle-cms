@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Model\Document;
 
-class Image implements DocumentElement
+final class Image implements DocumentElement
 {
     public function __construct(public string $id, public string $src, public ?string $alt, public ?string $description)
     {
@@ -17,7 +17,7 @@ class Image implements DocumentElement
 
     public function withSrc(string $src): self
     {
-        $instance = clone($this);
+        $instance = clone $this;
         $instance->src = $src;
 
         return $instance;

@@ -29,13 +29,12 @@ final class GoogleDriveAuth
     public function getAuthConfig(): array
     {
         $data = file_get_contents($this->authConfigPath);
-        if (false === $data) {
+        if ($data === false) {
             throw new \RuntimeException('Could not load the auth file');
         }
 
         Assertion::isJsonString($data);
-        $data = json_decode($data, true);
 
-        return $data;
+        return json_decode($data, true);
     }
 }

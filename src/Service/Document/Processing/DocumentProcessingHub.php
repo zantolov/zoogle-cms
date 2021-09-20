@@ -6,7 +6,7 @@ namespace Zantolov\ZoogleCms\Service\Document\Processing;
 
 use Zantolov\ZoogleCms\Model\Document\Document;
 
-class DocumentProcessingHub
+final class DocumentProcessingHub
 {
     /**
      * @var iterable<DocumentProcessor>
@@ -19,15 +19,15 @@ class DocumentProcessingHub
     public function __construct(iterable $processors)
     {
         $processors = iterator_to_array($processors);
-        usort($processors, fn (DocumentProcessor $pass1, DocumentProcessor $pass2) => $pass1->priority() <=> $pass2->priority());
+        usort($processors, static fn (DocumentProcessor $pass1, DocumentProcessor $pass2) => $pass1->priority() <=> $pass2->priority());
         $this->processors = $processors;
     }
 
     public function process(Document $document): Document
     {
-        $processedDocument = clone($document);
+        $processedDocument = clone $document;
         foreach ($this->processors as $processor) {
-            $processedDocument = $processor->process(clone($processedDocument));
+            $processedDocument = $processor->process(clone $processedDocument);
         }
 
         return $processedDocument;

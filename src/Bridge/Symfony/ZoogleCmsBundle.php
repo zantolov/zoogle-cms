@@ -6,7 +6,7 @@ namespace Zantolov\ZoogleCms\Bridge\Symfony;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class ZoogleCmsBundle extends Bundle
+final class ZoogleCmsBundle extends Bundle
 {
     public function getContainerExtension()
     {

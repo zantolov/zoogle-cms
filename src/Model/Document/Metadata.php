@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Model\Document;
 
-class Metadata implements DocumentElement
+final class Metadata implements DocumentElement
 {
     private array $values = [];
 
@@ -30,7 +30,7 @@ class Metadata implements DocumentElement
 
     public function has(string $key): bool
     {
-        return array_key_exists($key, $this->values);
+        return \array_key_exists($key, $this->values);
     }
 
     public function toString(): string

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Model\Document;
 
-class Subtitle implements DocumentElement
+final class Subtitle implements DocumentElement
 {
     public function __construct(public string $value)
     {

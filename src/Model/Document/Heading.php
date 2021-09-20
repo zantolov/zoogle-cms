@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Model\Document;
 
-class Heading implements DocumentElement
+final class Heading implements DocumentElement
 {
     public function __construct(public string $value, public int $level)
     {

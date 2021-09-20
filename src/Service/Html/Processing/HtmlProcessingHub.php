@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Service\Html\Processing;
 
-class HtmlProcessingHub
+final class HtmlProcessingHub
 {
     /**
      * @param iterable<HtmlProcessor> $processors

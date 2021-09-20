@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Service\GoogleDrive\Client;
 
-class GoogleDriveClientFactory
+final class GoogleDriveClientFactory
 {
     public function __construct(private BaseGoogleDriveClient $client, private CachedGoogleDriveClient $cachedClient)
     {

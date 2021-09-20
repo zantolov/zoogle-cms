@@ -9,7 +9,7 @@ use Zantolov\ZoogleCms\Model\Document\InlineObject;
 /**
  * @internal
  */
-class InlineObjectConverter extends AbstractContentElementConverter
+final class InlineObjectConverter extends AbstractContentElementConverter
 {
     /** @return InlineObject[] */
     public function convert(\Google_Service_Docs_Paragraph $paragraph): array

@@ -11,7 +11,7 @@ use Zantolov\ZoogleCms\Model\Document\DocumentList;
 use Zantolov\ZoogleCms\Model\Document\DocumentObject;
 use Zantolov\ZoogleCms\Model\Document\Metadata;
 
-class Converter
+final class Converter
 {
     /**
      * @param iterable<ElementConverter> $converters
@@ -58,11 +58,11 @@ class Converter
         return $elements;
     }
 
-    private function generateMetadata(\Google_Service_Docs_Document $doc): Metadata
+    private function generateMetadata(Google_Service_Docs_Document $doc): Metadata
     {
         $headers = $doc->getHeaders();
         $header = array_values($headers)[0] ?? null;
-        if (null === $header) {
+        if ($header === null) {
             return new Metadata([]);
         }
 
@@ -71,7 +71,7 @@ class Converter
         $items = array_map(
             fn (\Google_Service_Docs_StructuralElement $element) => array_reduce(
                 $this->generateElements($element),
-                fn (string $carry, DocumentElement $element) => $carry.$element->toString(),
+                static fn (string $carry, DocumentElement $element) => $carry.$element->toString(),
                 ''
             ),
             $items
@@ -81,7 +81,7 @@ class Converter
             $components = preg_split('/[\n\v]+/', $item);
             $components = array_filter($components);
             $keyValues = array_map(
-                fn (string $line) => explode(':', $line, 2),
+                static fn (string $line) => explode(':', $line, 2),
                 $components
             );
             foreach ($keyValues as $keyValue) {
@@ -92,7 +92,7 @@ class Converter
         return new Metadata($meta);
     }
 
-    private function generateDocumentLists(\Google_Service_Docs_Document $document): array
+    private function generateDocumentLists(Google_Service_Docs_Document $document): array
     {
         $lists = [];
         foreach ($document->getLists() as $listId => $list) {
@@ -111,10 +111,10 @@ class Converter
         return $lists;
     }
 
-    private function generateDocumentObjects(\Google_Service_Docs_Document $document): array
+    private function generateDocumentObjects(Google_Service_Docs_Document $document): array
     {
         $objects = [];
-        /** @var  \Google_Service_Docs_InlineObject $documentObject */
+        /** @var \Google_Service_Docs_InlineObject $documentObject */
         foreach ($document->getInlineObjects() as $id => $documentObject) {
             if ($documentObject->getInlineObjectProperties()?->getEmbeddedObject()) {
                 $embeddedObject = $documentObject->getInlineObjectProperties()?->getEmbeddedObject();
@@ -124,10 +124,11 @@ class Converter
                 // @todo add support for cropped images
                 // @todo add support for recolored images
 
-                if (null !== $imageSrc) {
+                if ($imageSrc !== null) {
                     $objects[] = new DocumentObject(
                         $id,
-                        DocumentObject::TYPE_IMAGE, [
+                        DocumentObject::TYPE_IMAGE,
+                        [
                             'src' => $imageSrc,
                             'title' => $embeddedObject->getTitle(),
                             'description' => $embeddedObject->getDescription(),

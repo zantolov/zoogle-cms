@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Model\Document;
 
-class DocumentList implements DocumentElement
+final class DocumentList implements DocumentElement
 {
     public const TYPE_ORDERED = 'ordered';
     public const TYPE_UNORDERED = 'unordered';
@@ -22,7 +22,7 @@ class DocumentList implements DocumentElement
     {
         return array_reduce(
             $this->texts,
-            fn (string $carry, ListItem $item) => $carry.$item->toString(),
+            static fn (string $carry, ListItem $item) => $carry.$item->toString(),
             ''
         );
     }

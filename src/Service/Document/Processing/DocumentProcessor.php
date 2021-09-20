@@ -14,7 +14,7 @@ interface DocumentProcessor
      * Lower priority gets executed first.
      * Useful for defining dependencies when one pass depends on another to be executed before it
      * e.g. InlineObject to Image conversion before Image is persisted or postprocessed
-     * (otherwise there won't be Image elements at all)
+     * (otherwise there won't be Image elements at all).
      */
     public function priority(): int;
 }

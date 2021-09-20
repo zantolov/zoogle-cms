@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Service\Document\Processing;
 
-use src\Infrastructure\GoogleDrive\Content\Document\Processing\AbstractProcessingPass;
 use Zantolov\ZoogleCms\Model\Document\Document;
 use Zantolov\ZoogleCms\Model\Document\DocumentElement;
 

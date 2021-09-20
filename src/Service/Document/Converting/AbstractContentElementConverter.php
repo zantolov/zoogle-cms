@@ -10,13 +10,13 @@ namespace Zantolov\ZoogleCms\Service\Document\Converting;
 abstract class AbstractContentElementConverter implements ElementConverter
 {
     /**
-     * Joins all content in a given paragraph without any formatting
+     * Joins all content in a given paragraph without any formatting.
      */
     protected function getUnformattedParagraphContent(\Google_Service_Docs_Paragraph $paragraph): string
     {
         return array_reduce(
             $paragraph->getElements(),
-            fn (
+            static fn (
                 string $carry,
                 \Google_Service_Docs_ParagraphElement $element
             ) => $carry.(trim($element?->getTextRun()?->getContent() ?: '')),
@@ -38,7 +38,7 @@ abstract class AbstractContentElementConverter implements ElementConverter
 
     private function getFormattedParagraphElementContent(\Google_Service_Docs_ParagraphElement $element): string
     {
-        if (null === $element->getTextRun() || empty(trim($element->getTextRun()))) {
+        if ($element->getTextRun() === null || empty(trim($element->getTextRun()))) {
             return '';
         }
 

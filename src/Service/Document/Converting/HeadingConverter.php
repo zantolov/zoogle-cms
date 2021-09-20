@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Service\Document\Converting;
 
-
 use Zantolov\ZoogleCms\Model\Document\Heading;
 
 /**
  * @internal
  */
-class HeadingConverter extends AbstractContentElementConverter
+final class HeadingConverter extends AbstractContentElementConverter
 {
     private static $headings = [
         'HEADING_1' => 1,
@@ -32,6 +31,6 @@ class HeadingConverter extends AbstractContentElementConverter
 
     public function supports(\Google_Service_Docs_Paragraph $paragraph): bool
     {
-        return array_key_exists($paragraph->getParagraphStyle()?->getNamedStyleType(), static::$headings);
+        return \array_key_exists($paragraph->getParagraphStyle()?->getNamedStyleType(), static::$headings);
     }
 }

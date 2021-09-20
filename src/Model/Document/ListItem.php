@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Model\Document;
 
-class ListItem implements DocumentElement
+final class ListItem implements DocumentElement
 {
     /**
      * @param Text[] $texts
@@ -17,7 +17,7 @@ class ListItem implements DocumentElement
     {
         return array_reduce(
             $this->texts,
-            fn (string $carry, Text $text) => $carry.$text->toString(),
+            static fn (string $carry, Text $text) => $carry.$text->toString(),
             ''
         );
     }

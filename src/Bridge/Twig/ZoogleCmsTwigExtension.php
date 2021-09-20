@@ -13,7 +13,7 @@ use Zantolov\ZoogleCms\Service\Document\DocumentRepository;
 use Zantolov\ZoogleCms\Service\Html\Converting\HtmlConverter;
 use Zantolov\ZoogleCms\Service\Html\Processing\HtmlProcessingHub;
 
-class ZoogleCmsTwigExtension extends AbstractExtension
+final class ZoogleCmsTwigExtension extends AbstractExtension
 {
     public function __construct(
         private DocumentRepository $documentRepository,
