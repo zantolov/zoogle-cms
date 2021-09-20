@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Zantolov\ZoogleCms\Service\Document\Processing;
+namespace Tests\Zantolov\ZoogleCms\Unit\Service\Document\Processing;
 
 use PHPUnit\Framework\TestCase;
 use Zantolov\ZoogleCms\Model\Document\Document;

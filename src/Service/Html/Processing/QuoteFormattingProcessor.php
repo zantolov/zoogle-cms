@@ -8,10 +8,10 @@ final class QuoteFormattingProcessor implements HtmlProcessor
 {
     public function process(string $html): string
     {
-        preg_match_all('/<p>\[quote\](.*?)<\/p>/ms', $html, $quotes);
+        \Safe\preg_match_all('/<p>\[quote\](.*?)<\/p>/ms', $html, $quotes);
         $html = str_replace(
             $quotes[0],
-            array_map(static fn (string $line) => sprintf('<blockquote>%s</blockquote>', trim($line)), $quotes[1]),
+            array_map(static fn (string $line) => \Safe\sprintf('<blockquote>%s</blockquote>', trim($line)), $quotes[1]),
             $html
         );
 

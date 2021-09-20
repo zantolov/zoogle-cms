@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Service\GoogleDrive\Client;
 
-use Google_Client;
-use Google_Service_Docs;
-use Google_Service_Drive;
+use Google\Client;
+use Google\Service\Docs;
+use Google\Service\Docs\Document;
+use Google\Service\Drive;
+use Google\Service\Drive\DriveFile;
 use GuzzleHttp\Psr7\Response;
 use Zantolov\ZoogleCms\Service\GoogleDrive\Configuration\Configuration;
 
@@ -16,7 +18,7 @@ final class BaseGoogleDriveClient implements GoogleDriveClient
     private const DOC_MIME_TYPE = 'application/vnd.google-apps.document';
     private const FOLDER_MIME_TYPE = 'application/vnd.google-apps.folder';
 
-    private Google_Client $client;
+    private Client $client;
     private array $cache = [];
 
     public function __construct(private GoogleDriveAuth $auth, private Configuration $configuration)
@@ -26,11 +28,10 @@ final class BaseGoogleDriveClient implements GoogleDriveClient
 
     private function initializeClient(): void
     {
-        $this->client = new Google_Client();
-        $this->client->setApplicationName('Client_Library_Examples');
+        $this->client = new Client();
+        $this->client->setApplicationName('Zoogle CMS');
         $this->client->setScopes([
-            Google_Service_Drive::DRIVE_READONLY,
-            Google_Service_Docs::DOCUMENTS_READONLY,
+            Drive::DRIVE_READONLY,
         ]);
         $this->client->setClientId($this->auth->getClientId());
         $this->client->setAuthConfig($this->auth->getAuthConfig());
@@ -49,20 +50,20 @@ final class BaseGoogleDriveClient implements GoogleDriveClient
         return $data;
     }
 
-    /** @return \Google_Service_Drive_DriveFile[] */
+    /** @return DriveFile[] */
     public function listDirectories(string $directoryId = null, int $limit = 1000): array
     {
-        $cacheKey = json_encode([__METHOD__, $directoryId, $limit]);
+        $cacheKey = \Safe\json_encode([__METHOD__, $directoryId, $limit]);
 
         return $this->cached($cacheKey, function () use ($directoryId, $limit) {
-            $service = new Google_Service_Drive($this->client);
+            $service = new Drive($this->client);
 
             $query = [
-                sprintf('mimeType = "%s"', self::FOLDER_MIME_TYPE),
+                \Safe\sprintf('mimeType = "%s"', self::FOLDER_MIME_TYPE),
             ];
 
             if ($directoryId !== null) {
-                $query[] = sprintf('"%s" in parents', $directoryId);
+                $query[] = \Safe\sprintf('"%s" in parents', $directoryId);
             }
 
             $fileList = $service->files->listFiles([
@@ -75,25 +76,25 @@ final class BaseGoogleDriveClient implements GoogleDriveClient
         });
     }
 
-    /** @return \Google_Service_Drive_DriveFile[] */
+    /** @return DriveFile[] */
     public function listRootDirectories(int $limit = 1000): array
     {
-        $cacheKey = json_encode([__METHOD__, $limit]);
+        $cacheKey = \Safe\json_encode([__METHOD__, $limit]);
 
         return $this->cached($cacheKey, fn () => $this->listDirectories($this->configuration->rootDirectoryId, $limit));
     }
 
-    /** @return \Google_Service_Drive_DriveFile[] */
+    /** @return DriveFile[] */
     public function listDocs(string $directoryId, int $limit = 1000): array
     {
-        $cacheKey = json_encode([__METHOD__, $directoryId, $limit]);
+        $cacheKey = \Safe\json_encode([__METHOD__, $directoryId, $limit]);
 
         return $this->cached($cacheKey, function () use ($directoryId, $limit) {
-            $service = new Google_Service_Drive($this->client);
+            $service = new Drive($this->client);
 
             $query = [
-                sprintf('mimeType = "%s"', self::DOC_MIME_TYPE),
-                sprintf('"%s" in parents', $directoryId),
+                \Safe\sprintf('mimeType = "%s"', self::DOC_MIME_TYPE),
+                \Safe\sprintf('"%s" in parents', $directoryId),
             ];
 
             $fileList = $service->files->listFiles([
@@ -106,16 +107,16 @@ final class BaseGoogleDriveClient implements GoogleDriveClient
         });
     }
 
-    /** @return \Google_Service_Drive_DriveFile[] */
+    /** @return DriveFile[] */
     public function listAllDocs(int $limit = 1000): array
     {
-        $cacheKey = json_encode([__METHOD__, $limit]);
+        $cacheKey = \Safe\json_encode([__METHOD__, $limit]);
 
         return $this->cached($cacheKey, function () use ($limit) {
-            $service = new Google_Service_Drive($this->client);
+            $service = new Drive($this->client);
 
             $query = [
-                sprintf('mimeType = "%s"', self::DOC_MIME_TYPE),
+                \Safe\sprintf('mimeType = "%s"', self::DOC_MIME_TYPE),
             ];
 
             $fileList = $service->files->listFiles([
@@ -128,17 +129,17 @@ final class BaseGoogleDriveClient implements GoogleDriveClient
         });
     }
 
-    /** @return \Google_Service_Drive_DriveFile[] */
+    /** @return DriveFile[] */
     public function searchDocs(string $query, int $limit = 1000): array
     {
-        $cacheKey = json_encode([__METHOD__, $limit, $query]);
+        $cacheKey = \Safe\json_encode([__METHOD__, $limit, $query]);
 
         return $this->cached($cacheKey, function () use ($query, $limit) {
-            $service = new Google_Service_Drive($this->client);
+            $service = new Drive($this->client);
 
             $query = [
-                sprintf('mimeType = "%s"', self::DOC_MIME_TYPE),
-                sprintf('(name contains "%s" OR fullText contains "%s")', $query, $query),
+                \Safe\sprintf('mimeType = "%s"', self::DOC_MIME_TYPE),
+                \Safe\sprintf('(name contains "%s" OR fullText contains "%s")', $query, $query),
             ];
 
             $fileList = $service->files->listFiles([
@@ -153,10 +154,10 @@ final class BaseGoogleDriveClient implements GoogleDriveClient
 
     public function getDocAsHTML(string $fileId): string
     {
-        $cacheKey = json_encode([__METHOD__, $fileId]);
+        $cacheKey = \Safe\json_encode([__METHOD__, $fileId]);
 
         return $this->cached($cacheKey, function () use ($fileId) {
-            $service = new Google_Service_Drive($this->client);
+            $service = new Drive($this->client);
 
             /** @var Response $file */
             $file = $service->files->export(
@@ -171,12 +172,12 @@ final class BaseGoogleDriveClient implements GoogleDriveClient
         });
     }
 
-    public function getFile(string $fileId): \Google_Service_Drive_DriveFile
+    public function getFile(string $fileId): DriveFile
     {
-        $cacheKey = json_encode([__METHOD__, $fileId]);
+        $cacheKey = \Safe\json_encode([__METHOD__, $fileId]);
 
         return $this->cached($cacheKey, function () use ($fileId) {
-            $service = new Google_Service_Drive($this->client);
+            $service = new Drive($this->client);
 
             return $service->files->get(
                 $fileId,
@@ -185,17 +186,17 @@ final class BaseGoogleDriveClient implements GoogleDriveClient
         });
     }
 
-    public function getDoc(string $fileId): \Google_Service_Docs_Document
+    public function getDoc(string $fileId): Document
     {
-        $service = new \Google_Service_Docs($this->client);
+        $service = new Docs($this->client);
 
-        return $service->documents->get($fileId, );
+        return $service->documents->get($fileId);
     }
 
     /**
      * @todo optimise searching by leveraging the search feature
      */
-    public function findByName(string $name): ?\Google_Service_Drive_DriveFile
+    public function findByName(string $name): ?DriveFile
     {
         foreach ($this->listAllDocs() as $file) {
             if ($file->getName() === $name) {

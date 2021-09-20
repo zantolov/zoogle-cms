@@ -26,15 +26,16 @@ final class GoogleDriveAuth
         return $this->clientId;
     }
 
+    /**
+     * @throws \Assert\AssertionFailedException
+     *
+     * @return array<int, mixed>
+     */
     public function getAuthConfig(): array
     {
-        $data = file_get_contents($this->authConfigPath);
-        if ($data === false) {
-            throw new \RuntimeException('Could not load the auth file');
-        }
-
+        $data = \Safe\file_get_contents($this->authConfigPath);
         Assertion::isJsonString($data);
 
-        return json_decode($data, true);
+        return \Safe\json_decode($data, true);
     }
 }

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Service\GoogleDrive\Client;
 
-use Google_Service_Drive_DriveFile;
+use Google\Service\Docs\Document;
+use Google\Service\Drive\DriveFile;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
@@ -44,7 +45,7 @@ final class CachedGoogleDriveClient implements GoogleDriveClient
         $this->cache->invalidateTags([$this->fileCacheTag($fileId)]);
     }
 
-    /** @return Google_Service_Drive_DriveFile[] */
+    /** @return DriveFile[] */
     public function listDirectories(string $directoryId = null, int $limit = 1000): array
     {
         $key = 'listDirectories.dir_'.$directoryId.'.limit_'.$limit;
@@ -62,7 +63,7 @@ final class CachedGoogleDriveClient implements GoogleDriveClient
         });
     }
 
-    /** @return Google_Service_Drive_DriveFile[] */
+    /** @return DriveFile[] */
     public function listRootDirectories(int $limit = 1000): array
     {
         $key = 'listRootDirectories.limit_'.$limit;
@@ -76,7 +77,7 @@ final class CachedGoogleDriveClient implements GoogleDriveClient
         });
     }
 
-    /** @return Google_Service_Drive_DriveFile[] */
+    /** @return DriveFile[] */
     public function listDocs(string $directoryId, int $limit = 1000): array
     {
         $key = 'listDocs.dir_'.$directoryId.'.limit_'.$limit;
@@ -98,7 +99,7 @@ final class CachedGoogleDriveClient implements GoogleDriveClient
         });
     }
 
-    /** @return Google_Service_Drive_DriveFile[] */
+    /** @return DriveFile[] */
     public function listAllDocs(int $limit = 1000): array
     {
         $key = 'listAllDocs.limit_'.$limit;
@@ -116,7 +117,7 @@ final class CachedGoogleDriveClient implements GoogleDriveClient
         });
     }
 
-    /** @return Google_Service_Drive_DriveFile[] */
+    /** @return DriveFile[] */
     public function searchDocs(string $query, int $limit = 1000): array
     {
         $key = 'listAllDocs.limit_'.$limit.'.query_'.$query;
@@ -134,7 +135,7 @@ final class CachedGoogleDriveClient implements GoogleDriveClient
         });
     }
 
-    public function getDoc(string $fileId): \Google_Service_Docs_Document
+    public function getDoc(string $fileId): Document
     {
         $key = 'getDoc.file_'.$fileId;
 
@@ -162,7 +163,7 @@ final class CachedGoogleDriveClient implements GoogleDriveClient
         });
     }
 
-    public function getFile(string $fileId): Google_Service_Drive_DriveFile
+    public function getFile(string $fileId): DriveFile
     {
         $key = 'getFile.file_'.$fileId;
 
@@ -176,7 +177,7 @@ final class CachedGoogleDriveClient implements GoogleDriveClient
         });
     }
 
-    public function findByName(string $name): ?Google_Service_Drive_DriveFile
+    public function findByName(string $name): ?DriveFile
     {
         $key = 'getFile.file_name_'.$name;
 

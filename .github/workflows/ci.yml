@@ -1,0 +1,23 @@
+name: "CI"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  ci:
+    name: "CI Pipeline"
+    runs-on: [ "ubuntu-latest" ]
+    env:
+      DOCKER_BUILDKIT: 1
+      RUN_FOLDER: run-${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: run-${{ github.sha }}
+      - name: Build Docker image
+        run: |
+          cd $RUN_FOLDER \
+          && docker build -f infrastructure/Dockerfile .
