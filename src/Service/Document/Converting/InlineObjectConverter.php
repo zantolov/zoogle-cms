@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Service\Document\Converting;
 
+use Google\Service\Docs\InlineObjectElement;
+use Google\Service\Docs\Paragraph;
 use Zantolov\ZoogleCms\Model\Document\InlineObject;
 
 /**
@@ -11,13 +13,18 @@ use Zantolov\ZoogleCms\Model\Document\InlineObject;
  */
 final class InlineObjectConverter extends AbstractContentElementConverter
 {
-    /** @return InlineObject[] */
-    public function convert(\Google_Service_Docs_Paragraph $paragraph): array
+    /**
+     * @param Paragraph<Paragraph> $paragraph
+     *
+     * @return list<InlineObject>
+     */
+    public function convert(Paragraph $paragraph): array
     {
         $inlineObjects = [];
-        /** @var \Google_Service_Docs_ParagraphElement $element */
         foreach ($paragraph->getElements() as $element) {
-            if ($object = $element->getInlineObjectElement()) {
+            /** @var ?InlineObjectElement<InlineObjectElement> $object */
+            $object = $element->getInlineObjectElement();
+            if ($object !== null) {
                 $inlineObjects[] = new InlineObject($object->getInlineObjectId());
             }
         }
@@ -25,11 +32,15 @@ final class InlineObjectConverter extends AbstractContentElementConverter
         return $inlineObjects;
     }
 
-    public function supports(\Google_Service_Docs_Paragraph $paragraph): bool
+    /**
+     * @param Paragraph<Paragraph> $paragraph
+     */
+    public function supports(Paragraph $paragraph): bool
     {
-        /** @var \Google_Service_Docs_ParagraphElement $element */
         foreach ($paragraph->getElements() as $element) {
-            if ($element->getInlineObjectElement()) {
+            /** @var ?InlineObjectElement<InlineObjectElement> $object */
+            $object = $element->getInlineObjectElement();
+            if ($object !== null) {
                 return true;
             }
         }

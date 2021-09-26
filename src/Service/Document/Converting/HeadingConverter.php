@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Service\Document\Converting;
 
+use Google\Service\Docs\Paragraph;
 use Zantolov\ZoogleCms\Model\Document\Heading;
 
 /**
@@ -11,7 +12,10 @@ use Zantolov\ZoogleCms\Model\Document\Heading;
  */
 final class HeadingConverter extends AbstractContentElementConverter
 {
-    private static $headings = [
+    /**
+     * @var array<string, int>
+     */
+    private static array $headings = [
         'HEADING_1' => 1,
         'HEADING_2' => 2,
         'HEADING_3' => 3,
@@ -20,17 +24,24 @@ final class HeadingConverter extends AbstractContentElementConverter
         'HEADING_6' => 6,
     ];
 
-    /** @return Heading[] */
-    public function convert(\Google_Service_Docs_Paragraph $paragraph): array
+    /**
+     * @param Paragraph<Paragraph> $paragraph
+     *
+     * @return list<Heading>
+     */
+    public function convert(Paragraph $paragraph): array
     {
         $content = $this->getUnformattedParagraphContent($paragraph);
-        $level = static::$headings[$paragraph->getParagraphStyle()?->getNamedStyleType()];
+        $level = static::$headings[$paragraph->getParagraphStyle()->getNamedStyleType()];
 
         return [new Heading($content, $level)];
     }
 
-    public function supports(\Google_Service_Docs_Paragraph $paragraph): bool
+    /**
+     * @param Paragraph<Paragraph> $paragraph
+     */
+    public function supports(Paragraph $paragraph): bool
     {
-        return \array_key_exists($paragraph->getParagraphStyle()?->getNamedStyleType(), static::$headings);
+        return \array_key_exists($paragraph->getParagraphStyle()->getNamedStyleType(), static::$headings);
     }
 }

@@ -19,6 +19,10 @@ final class BaseGoogleDriveClient implements GoogleDriveClient
     private const FOLDER_MIME_TYPE = 'application/vnd.google-apps.folder';
 
     private Client $client;
+
+    /**
+     * @var array<string, mixed>
+     */
     private array $cache = [];
 
     public function __construct(private GoogleDriveAuth $auth, private Configuration $configuration)
@@ -37,7 +41,7 @@ final class BaseGoogleDriveClient implements GoogleDriveClient
         $this->client->setAuthConfig($this->auth->getAuthConfig());
     }
 
-    private function cached(string $key, callable $callback)
+    private function cached(string $key, callable $callback): mixed
     {
         $cachedData = $this->cache[$key] ?? null;
         if ($cachedData !== null) {
@@ -168,7 +172,7 @@ final class BaseGoogleDriveClient implements GoogleDriveClient
                 ]
             );
 
-            return $file->getBody()?->getContents();
+            return $file->getBody()->getContents();
         });
     }
 

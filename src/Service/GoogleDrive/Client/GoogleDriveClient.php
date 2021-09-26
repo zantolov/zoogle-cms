@@ -28,7 +28,13 @@ interface GoogleDriveClient
 
     public function getDoc(string $fileId): Document;
 
+    /**
+     * @return DriveFile<DriveFile>
+     */
     public function getFile(string $fileId): DriveFile;
 
+    /**
+     * @return null|DriveFile<DriveFile>
+     */
     public function findByName(string $name): ?DriveFile;
 }

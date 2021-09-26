@@ -23,7 +23,7 @@ final class DocumentRepository
      */
     public function getByUrl(string $url): Document
     {
-        preg_match('/https:\/\/docs.google.com\/document\/d\/(.*)(?:\/edit)?$/U', $url, $result);
+        \Safe\preg_match('/https:\/\/docs.google.com\/document\/d\/(.*)(?:\/edit)?$/U', $url, $result);
         $id = $result[1] ?? null;
         if (empty($id)) {
             throw new \InvalidArgumentException('Invalid URL given.');

@@ -4,15 +4,23 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Service\Document\Converting;
 
-use App\Domain\Document\Model\ContentElement;
+use Google\Service\Docs\Paragraph;
+use Zantolov\ZoogleCms\Model\Document\DocumentElement;
 
 /**
  * @internal
  */
 interface ElementConverter
 {
-    /** @return ContentElement[] */
-    public function convert(\Google_Service_Docs_Paragraph $paragraph): array;
+    /**
+     * @param Paragraph<Paragraph> $paragraph
+     *
+     * @return list<DocumentElement>
+     */
+    public function convert(Paragraph $paragraph): array;
 
-    public function supports(\Google_Service_Docs_Paragraph $paragraph): bool;
+    /**
+     * @param Paragraph<Paragraph> $paragraph
+     */
+    public function supports(Paragraph $paragraph): bool;
 }

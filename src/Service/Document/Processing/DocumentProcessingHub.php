@@ -14,12 +14,15 @@ final class DocumentProcessingHub
     private iterable $processors;
 
     /**
-     * @param iterable<DocumentProcessor> $processors
+     * @param \Traversable<DocumentProcessor> $processors
      */
-    public function __construct(iterable $processors)
+    public function __construct(\Traversable $processors)
     {
         $processors = iterator_to_array($processors);
-        usort($processors, static fn (DocumentProcessor $pass1, DocumentProcessor $pass2) => $pass1->priority() <=> $pass2->priority());
+        \Safe\usort(
+            $processors,
+            static fn (DocumentProcessor $pass1, DocumentProcessor $pass2) => $pass1->priority() <=> $pass2->priority()
+        );
         $this->processors = $processors;
     }
 

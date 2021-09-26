@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Service\Document\Processing;
 
+use Assert\Assertion;
 use Zantolov\ZoogleCms\Model\Document\Document;
 use Zantolov\ZoogleCms\Model\Document\DocumentList;
 use Zantolov\ZoogleCms\Model\Document\ListItem;
@@ -21,6 +22,7 @@ final class ListNormalizationProcessor implements DocumentProcessor
             if ($element instanceof ListItem) {
                 if (isset($lists[$element->listId]) === false) {
                     $list = $document->getList($element->listId);
+                    Assertion::notNull($list);
                     $lists[$element->listId] = $list;
                     $elements[] = $list;
                 }

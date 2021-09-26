@@ -11,7 +11,7 @@ final class Document
     /**
      * @param DocumentElement[] $elements
      * @param DocumentList[] $lists
-     * @param InlineObject[] $objects
+     * @param DocumentObject[] $objects
      */
     public function __construct(public string $id, public array $elements, public array $lists, public array $objects)
     {

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Service\Document\Converting;
 
+use Google\Service\Docs\Paragraph as GoogleParagraph;
+use Zantolov\ZoogleCms\Model\Document\DocumentElement;
 use Zantolov\ZoogleCms\Model\Document\ListItem;
 use Zantolov\ZoogleCms\Model\Document\Paragraph;
 use Zantolov\ZoogleCms\Model\Document\Text;
@@ -13,8 +15,12 @@ use Zantolov\ZoogleCms\Model\Document\Text;
  */
 final class ContentConverter extends AbstractContentElementConverter
 {
-    /** @return ContentElement[] */
-    public function convert(\Google_Service_Docs_Paragraph $paragraph): array
+    /**
+     * @param GoogleParagraph<GoogleParagraph>
+     *
+     * @return list<DocumentElement>
+     */
+    public function convert(GoogleParagraph $paragraph): array
     {
         $listId = null;
         $nestingLevel = null;

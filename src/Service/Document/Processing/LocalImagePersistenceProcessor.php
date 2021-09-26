@@ -33,9 +33,10 @@ final class LocalImagePersistenceProcessor extends AbstractElementDocumentProces
         $imageHash = sha1($document->id.$element->id);
         $pathParts = pathinfo($element->src);
         $extension = $pathParts['extension'] ?? 'jpg';
-        $filename = sprintf('%s.%s', $imageHash, $extension);
+        $filename = \Safe\sprintf('%s.%s', $imageHash, $extension);
 
-        $cachedItem = $this->cache->get($filename, static fn () => file_get_contents($element->src));
+        // Warm up cache
+        $this->cache->get($filename, static fn () => \Safe\file_get_contents($element->src));
 
         $proxyedImageUrl = $this->router->generate(
             'zoogle_cms_image',
