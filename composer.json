@@ -62,7 +62,6 @@
             "@lint",
             "@code-style:check",
             "@phpstan",
-            "@deptrac",
             "@rector:check"
         ],
         "phpunit": [

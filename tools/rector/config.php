@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Rector\CodeQuality\Rector\Array_\CallableThisArrayToAnonymousFunctionRector;
 use Rector\Core\Configuration\Option;
 use Rector\Core\ValueObject\PhpVersion;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
@@ -16,8 +17,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters->set(Option::PHPSTAN_FOR_RECTOR_PATH, __DIR__.'/tools/phpstan/config.neon');
     $parameters->set(Option::SKIP, [
         ClassPropertyAssignToConstructorPromotionRector::class,
+        CallableThisArrayToAnonymousFunctionRector::class,
     ]);
     $containerConfigurator->import(SetList::CODE_QUALITY);
     $containerConfigurator->import(SetList::PHP_80);
     $containerConfigurator->import(SetList::TYPE_DECLARATION_STRICT);
+    $containerConfigurator->import(SetList::PSR_4);
 };

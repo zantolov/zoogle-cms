@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Model\Document;
 
-final class Title implements DocumentElement
+final class Title implements \Stringable, DocumentElement
 {
     public function __construct(public string $value)
     {
@@ -15,7 +15,7 @@ final class Title implements DocumentElement
         return $this->value;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toString();
     }

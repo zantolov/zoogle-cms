@@ -85,7 +85,10 @@ final class BaseGoogleDriveClient implements GoogleDriveClient
     {
         $cacheKey = \Safe\json_encode([__METHOD__, $limit]);
 
-        return $this->cached($cacheKey, fn () => $this->listDirectories($this->configuration->rootDirectoryId, $limit));
+        return $this->cached(
+            $cacheKey,
+            fn (): array => $this->listDirectories($this->configuration->rootDirectoryId, $limit)
+        );
     }
 
     /** @return DriveFile[] */
@@ -93,7 +96,7 @@ final class BaseGoogleDriveClient implements GoogleDriveClient
     {
         $cacheKey = \Safe\json_encode([__METHOD__, $directoryId, $limit]);
 
-        return $this->cached($cacheKey, function () use ($directoryId, $limit) {
+        return $this->cached($cacheKey, function () use ($directoryId, $limit): array {
             $service = new Drive($this->client);
 
             $query = [
@@ -116,7 +119,7 @@ final class BaseGoogleDriveClient implements GoogleDriveClient
     {
         $cacheKey = \Safe\json_encode([__METHOD__, $limit]);
 
-        return $this->cached($cacheKey, function () use ($limit) {
+        return $this->cached($cacheKey, function () use ($limit): array {
             $service = new Drive($this->client);
 
             $query = [
@@ -138,7 +141,7 @@ final class BaseGoogleDriveClient implements GoogleDriveClient
     {
         $cacheKey = \Safe\json_encode([__METHOD__, $limit, $query]);
 
-        return $this->cached($cacheKey, function () use ($query, $limit) {
+        return $this->cached($cacheKey, function () use ($query, $limit): array {
             $service = new Drive($this->client);
 
             $query = [
@@ -160,7 +163,7 @@ final class BaseGoogleDriveClient implements GoogleDriveClient
     {
         $cacheKey = \Safe\json_encode([__METHOD__, $fileId]);
 
-        return $this->cached($cacheKey, function () use ($fileId) {
+        return $this->cached($cacheKey, function () use ($fileId): string {
             $service = new Drive($this->client);
 
             /** @var Response $file */

@@ -9,9 +9,8 @@ use Google\Service\Docs\Bullet as GoogleBullet;
 /** @psalm-immutable */
 final class Bullet
 {
-    public function __construct(
-        private GoogleBullet $decorated
-    ) {
+    public function __construct(private GoogleBullet $decorated)
+    {
     }
 
     public function getListId(): ?string

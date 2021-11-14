@@ -6,6 +6,7 @@ namespace Zantolov\ZoogleCms\Service\Document\Converting;
 
 use Zantolov\ZoogleCms\Model\Google\Paragraph;
 use Zantolov\ZoogleCms\Model\Google\ParagraphElement;
+use Zantolov\ZoogleCms\Model\Google\TextRun;
 
 /**
  * @internal
@@ -22,7 +23,7 @@ abstract class AbstractContentElementConverter implements ElementConverter
             static fn (
                 string $carry,
                 ParagraphElement $element
-            ) => $carry.(trim($element->getTextRun()?->getContent() ?: '')),
+            ): string => $carry.(trim($element->getTextRun()?->getContent() ?: '')),
             ''
         );
     }
@@ -34,7 +35,7 @@ abstract class AbstractContentElementConverter implements ElementConverter
             fn (
                 string $carry,
                 ParagraphElement $element
-            ) => $carry.$this->getFormattedParagraphElementContent($element),
+            ): string => $carry.$this->getFormattedParagraphElementContent($element),
             ''
         );
     }
@@ -42,7 +43,7 @@ abstract class AbstractContentElementConverter implements ElementConverter
     private function getFormattedParagraphElementContent(ParagraphElement $element): string
     {
         $textRun = $element->getTextRun();
-        if ($textRun === null) {
+        if (!$textRun instanceof TextRun) {
             return '';
         }
 

@@ -21,7 +21,7 @@ final class DocumentProcessingHub
         $processors = iterator_to_array($processors);
         \Safe\usort(
             $processors,
-            static fn (DocumentProcessor $pass1, DocumentProcessor $pass2) => $pass1->priority() <=> $pass2->priority()
+            static fn (DocumentProcessor $pass1, DocumentProcessor $pass2): int => $pass1->priority() <=> $pass2->priority()
         );
         $this->processors = $processors;
     }

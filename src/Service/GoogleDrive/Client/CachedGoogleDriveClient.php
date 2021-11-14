@@ -50,8 +50,8 @@ final class CachedGoogleDriveClient implements GoogleDriveClient
     {
         $key = 'listDirectories.dir_'.$directoryId.'.limit_'.$limit;
 
-        return $this->cache->get($key, function (ItemInterface $item) use ($directoryId, $limit) {
-            if ($directoryId) {
+        return $this->cache->get($key, function (ItemInterface $item) use ($directoryId, $limit): array {
+            if ($directoryId !== null) {
                 $item->tag($this->dirCacheTag($directoryId));
             }
 
@@ -68,7 +68,7 @@ final class CachedGoogleDriveClient implements GoogleDriveClient
     {
         $key = 'listRootDirectories.limit_'.$limit;
 
-        return $this->cache->get($key, function (ItemInterface $item) use ($limit) {
+        return $this->cache->get($key, function (ItemInterface $item) use ($limit): array {
             $data = $this->client->listRootDirectories($limit);
             $item->set($data);
             $item->tag($this->commonCacheTag());
@@ -82,14 +82,11 @@ final class CachedGoogleDriveClient implements GoogleDriveClient
     {
         $key = 'listDocs.dir_'.$directoryId.'.limit_'.$limit;
 
-        return $this->cache->get($key, function (ItemInterface $item) use ($directoryId, $limit) {
-            if ($directoryId) {
-                $item->tag($this->dirCacheTag($directoryId));
-            }
-
+        return $this->cache->get($key, function (ItemInterface $item) use ($directoryId, $limit): array {
             $data = $this->client->listDocs($directoryId, $limit);
             $item->set($data);
             $item->tag($this->commonCacheTag());
+            $item->tag($this->dirCacheTag($directoryId));
 
             foreach ($data as $file) {
                 $item->tag($this->fileCacheTag($file->getId()));
@@ -104,7 +101,7 @@ final class CachedGoogleDriveClient implements GoogleDriveClient
     {
         $key = 'listAllDocs.limit_'.$limit;
 
-        return $this->cache->get($key, function (ItemInterface $item) use ($limit) {
+        return $this->cache->get($key, function (ItemInterface $item) use ($limit): array {
             $data = $this->client->listAllDocs($limit);
             $item->set($data);
             $item->tag($this->commonCacheTag());
@@ -122,7 +119,7 @@ final class CachedGoogleDriveClient implements GoogleDriveClient
     {
         $key = 'listAllDocs.limit_'.$limit.'.query_'.$query;
 
-        return $this->cache->get($key, function (ItemInterface $item) use ($query, $limit) {
+        return $this->cache->get($key, function (ItemInterface $item) use ($query, $limit): array {
             $data = $this->client->searchDocs($query, $limit);
             $item->set($data);
             $item->tag($this->commonCacheTag());
@@ -139,7 +136,7 @@ final class CachedGoogleDriveClient implements GoogleDriveClient
     {
         $key = 'getDoc.file_'.$fileId;
 
-        return $this->cache->get($key, function (ItemInterface $item) use ($fileId) {
+        return $this->cache->get($key, function (ItemInterface $item) use ($fileId): Document {
             $data = $this->client->getDoc($fileId);
             $item->tag($this->fileCacheTag($fileId));
             $item->tag($this->commonCacheTag());
@@ -153,7 +150,7 @@ final class CachedGoogleDriveClient implements GoogleDriveClient
     {
         $key = 'getDocAsHTML.fileHtml_'.$fileId;
 
-        return $this->cache->get($key, function (ItemInterface $item) use ($fileId) {
+        return $this->cache->get($key, function (ItemInterface $item) use ($fileId): string {
             $item->tag($this->fileCacheTag($fileId));
             $item->tag($this->commonCacheTag());
             $data = $this->client->getDocAsHTML($fileId);
@@ -167,7 +164,7 @@ final class CachedGoogleDriveClient implements GoogleDriveClient
     {
         $key = 'getFile.file_'.$fileId;
 
-        return $this->cache->get($key, function (ItemInterface $item) use ($fileId) {
+        return $this->cache->get($key, function (ItemInterface $item) use ($fileId): DriveFile {
             $item->tag($this->fileCacheTag($fileId));
             $item->tag($this->commonCacheTag());
             $data = $this->client->getFile($fileId);
@@ -181,7 +178,7 @@ final class CachedGoogleDriveClient implements GoogleDriveClient
     {
         $key = 'getFile.file_name_'.$name;
 
-        return $this->cache->get($key, function (ItemInterface $item) use ($name) {
+        return $this->cache->get($key, function (ItemInterface $item) use ($name): ?DriveFile {
             $item->tag($this->fileCacheTag('name_'.$name));
             $item->tag($this->commonCacheTag());
             $data = $this->client->findByName($name);

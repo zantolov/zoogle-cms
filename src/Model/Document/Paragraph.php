@@ -17,7 +17,7 @@ final class Paragraph implements DocumentElement
     {
         return array_reduce(
             $this->texts,
-            static fn (string $carry, Text $text) => $carry.$text->toString(),
+            static fn (string $carry, Text $text): string => $carry.$text->toString(),
             ''
         );
     }

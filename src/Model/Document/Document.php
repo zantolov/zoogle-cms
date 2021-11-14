@@ -36,35 +36,35 @@ class Document
     public function getList(string $listId): ?DocumentList
     {
         return Chain::create($this->lists)
-            ->filter(static fn (DocumentList $list) => $list->id === $listId)
+            ->filter(static fn (DocumentList $list): bool => $list->id === $listId)
             ->first() ?: null;
     }
 
     public function getObject(string $objectId): ?DocumentObject
     {
         return Chain::create($this->objects)
-            ->filter(static fn (DocumentObject $object) => $object->id === $objectId)
+            ->filter(static fn (DocumentObject $object): bool => $object->id === $objectId)
             ->first() ?: null;
     }
 
     public function getTitle(): ?Title
     {
         return Chain::create($this->elements)
-            ->filter(static fn (DocumentElement $element) => $element instanceof Title)
+            ->filter(static fn (DocumentElement $element): bool => $element instanceof Title)
             ->first() ?: null;
     }
 
     public function getSubtitle(): ?Subtitle
     {
         return Chain::create($this->elements)
-            ->filter(static fn (DocumentElement $element) => $element instanceof Subtitle)
+            ->filter(static fn (DocumentElement $element): bool => $element instanceof Subtitle)
             ->first() ?: null;
     }
 
     public function getMetadata(): ?Metadata
     {
         return Chain::create($this->elements)
-            ->filter(static fn (DocumentElement $element) => $element instanceof Metadata)
+            ->filter(static fn (DocumentElement $element): bool => $element instanceof Metadata)
             ->first() ?: null;
     }
 
@@ -74,7 +74,7 @@ class Document
     public function getImages(): array
     {
         return Chain::create($this->elements)
-            ->filter(static fn (DocumentElement $element) => $element instanceof Image)
+            ->filter(static fn (DocumentElement $element): bool => $element instanceof Image)
             ->values()
             ->array;
     }
@@ -85,7 +85,7 @@ class Document
     public function getParagraphs(): array
     {
         return Chain::create($this->elements)
-            ->filter(static fn (DocumentElement $element) => $element instanceof Paragraph)
+            ->filter(static fn (DocumentElement $element): bool => $element instanceof Paragraph)
             ->values()
             ->array;
     }
@@ -109,7 +109,7 @@ class Document
     public function withoutFirstImage(): self
     {
         $items = Chain::create($this->elements)
-            ->filter(fn (DocumentElement $element) => $element !== $this->firstImage())
+            ->filter(fn (DocumentElement $element): bool => $element !== $this->firstImage())
             ->values()
             ->array;
 

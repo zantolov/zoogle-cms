@@ -10,6 +10,7 @@ use Zantolov\ZoogleCms\Model\Document\Paragraph;
 use Zantolov\ZoogleCms\Model\Document\Text;
 use Zantolov\ZoogleCms\Model\Google\Paragraph as GoogleParagraph;
 use Zantolov\ZoogleCms\Model\Google\ParagraphElement;
+use Zantolov\ZoogleCms\Model\Google\TextRun;
 
 /**
  * @internal
@@ -23,8 +24,9 @@ final class ContentConverter extends AbstractContentElementConverter
     {
         $listId = null;
         $nestingLevel = null;
+        $bullet = $paragraph->getBullet();
 
-        if ($bullet = $paragraph->getBullet()) {
+        if ($bullet !== null) {
             $listId = $bullet->getListId();
             $nestingLevel = $bullet->getNestingLevel();
         }
@@ -48,7 +50,7 @@ final class ContentConverter extends AbstractContentElementConverter
     public function supports(GoogleParagraph $paragraph): bool
     {
         return $paragraph->getNamedStyleType() === 'NORMAL_TEXT'
-            && \count($this->convertParagraphElements($paragraph->getElements())) > 0;
+            && $this->convertParagraphElements($paragraph->getElements()) !== [];
     }
 
     /**
@@ -59,7 +61,7 @@ final class ContentConverter extends AbstractContentElementConverter
     private function convertParagraphElements(array $elements): array
     {
         $paragraphElements = array_map(
-            fn (ParagraphElement $element) => $this->convertParagraphElement($element),
+            fn (ParagraphElement $element): ?Text => $this->convertParagraphElement($element),
             $elements
         );
 
@@ -71,7 +73,7 @@ final class ContentConverter extends AbstractContentElementConverter
         // Skip empty content
         $textRun = $element->getTextRun();
         $content = $textRun?->getContent();
-        if ($textRun === null || $content === null || empty(trim($content))) {
+        if (!$textRun instanceof TextRun || $content === null || empty(trim($content))) {
             return null;
         }
 

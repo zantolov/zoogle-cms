@@ -6,6 +6,7 @@ namespace Zantolov\ZoogleCms\Service\Document\Converting;
 
 use Assert\Assertion;
 use Google\Service\Docs\Document as GoogleDocument;
+use Google\Service\Docs\Header;
 use Google\Service\Docs\SectionBreak;
 use Google\Service\Docs\StructuralElement;
 use Google\Service\Docs\Table;
@@ -75,16 +76,16 @@ final class Converter
     {
         $headers = $doc->getHeaders();
         $header = array_values($headers)[0] ?? null;
-        if ($header === null) {
+        if (!$header instanceof Header) {
             return new Metadata([]);
         }
 
         $meta = [];
         $items = $header->getContent();
         $items = array_map(
-            fn (\Google_Service_Docs_StructuralElement $element) => array_reduce(
+            fn (\Google_Service_Docs_StructuralElement $element): string => array_reduce(
                 $this->generateElements($element),
-                static fn (string $carry, DocumentElement $element) => $carry.$element->toString(),
+                static fn (string $carry, DocumentElement $element): string => $carry.$element->toString(),
                 ''
             ),
             $items

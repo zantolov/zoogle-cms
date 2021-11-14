@@ -20,7 +20,7 @@ final class ListNormalizationProcessor implements DocumentProcessor
         $elements = [];
         foreach ($document->elements as $element) {
             if ($element instanceof ListItem) {
-                if (isset($lists[$element->listId]) === false) {
+                if (!isset($lists[$element->listId])) {
                     $list = $document->getList($element->listId);
                     Assertion::notNull($list);
                     $lists[$element->listId] = $list;

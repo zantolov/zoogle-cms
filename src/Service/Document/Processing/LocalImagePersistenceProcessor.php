@@ -36,15 +36,14 @@ final class LocalImagePersistenceProcessor extends AbstractElementDocumentProces
         $filename = \Safe\sprintf('%s.%s', $imageHash, $extension);
 
         // Warm up cache
-        $this->cache->get($filename, static fn () => \Safe\file_get_contents($element->src));
+        $this->cache->get($filename, static fn (): string => \Safe\file_get_contents($element->src));
 
         $proxyedImageUrl = $this->router->generate(
             'zoogle_cms_image',
             ['filename' => $filename],
             RouterInterface::ABSOLUTE_URL
         );
-        $element = $element->withSrc($proxyedImageUrl);
 
-        return $element;
+        return $element->withSrc($proxyedImageUrl);
     }
 }

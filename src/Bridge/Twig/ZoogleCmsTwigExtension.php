@@ -22,14 +22,20 @@ final class ZoogleCmsTwigExtension extends AbstractExtension
     ) {
     }
 
-    public function getFunctions()
+    /**
+     * @return TwigFunction[]
+     */
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('zoogle_document', [$this, 'zoogleDocument']),
         ];
     }
 
-    public function getFilters()
+    /**
+     * @return TwigFilter[]
+     */
+    public function getFilters(): array
     {
         return [
             new TwigFilter('zoogle_html', [$this, 'zoogleHtml'], ['is_safe' => ['html']]),
