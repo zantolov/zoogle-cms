@@ -9,6 +9,9 @@ final class DocumentList implements DocumentElement
     public const TYPE_ORDERED = 'ordered';
     public const TYPE_UNORDERED = 'unordered';
 
+    /**
+     * @param list<ListItem> $items
+     */
     public function __construct(public string $id, public array $items, public string $type)
     {
     }
@@ -21,7 +24,7 @@ final class DocumentList implements DocumentElement
     public function toString(): string
     {
         return array_reduce(
-            $this->texts,
+            $this->items,
             static fn (string $carry, ListItem $item) => $carry.$item->toString(),
             ''
         );

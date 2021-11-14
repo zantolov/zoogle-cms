@@ -6,7 +6,6 @@ namespace Zantolov\ZoogleCms\Service\Document\Converting;
 
 use Assert\Assertion;
 use Google\Service\Docs\Document as GoogleDocument;
-use Google\Service\Docs\Paragraph;
 use Google\Service\Docs\SectionBreak;
 use Google\Service\Docs\StructuralElement;
 use Google\Service\Docs\Table;
@@ -15,6 +14,7 @@ use Zantolov\ZoogleCms\Model\Document\DocumentElement;
 use Zantolov\ZoogleCms\Model\Document\DocumentList;
 use Zantolov\ZoogleCms\Model\Document\DocumentObject;
 use Zantolov\ZoogleCms\Model\Document\Metadata;
+use Zantolov\ZoogleCms\Model\Google\Paragraph;
 
 final class Converter
 {
@@ -47,9 +47,8 @@ final class Converter
     private function generateElements(StructuralElement $element): array
     {
         $elements = [];
-        /** @var ?Paragraph<Paragraph> $paragraph */
-        $paragraph = $element->getParagraph();
-        if ($paragraph !== null) {
+        if ($element->getParagraph() !== null) {
+            $paragraph = new Paragraph($element->getParagraph());
             foreach ($this->converters as $converter) {
                 if ($converter->supports($paragraph)) {
                     $elements = [...$elements, ...$converter->convert($paragraph)];

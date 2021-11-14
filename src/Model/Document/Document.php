@@ -6,22 +6,28 @@ namespace Zantolov\ZoogleCms\Model\Document;
 
 use Cocur\Chain\Chain;
 
-final class Document
+class Document
 {
     /**
-     * @param DocumentElement[] $elements
-     * @param DocumentList[] $lists
-     * @param DocumentObject[] $objects
+     * @param list<DocumentElement> $elements
+     * @param list<DocumentList> $lists
+     * @param list<DocumentObject> $objects
      */
     public function __construct(public string $id, public array $elements, public array $lists, public array $objects)
     {
     }
 
+    /**
+     * @return list<DocumentList>
+     */
     public function getLists(): array
     {
         return $this->lists;
     }
 
+    /**
+     * @return list<DocumentObject>
+     */
     public function getObjects(): array
     {
         return $this->objects;
@@ -89,6 +95,9 @@ final class Document
         return $this->getImages()[0] ?? null;
     }
 
+    /**
+     * @param list<DocumentElement> $elements
+     */
     public function withElements(array $elements): self
     {
         $instance = clone $this;

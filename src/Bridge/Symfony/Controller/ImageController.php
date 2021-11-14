@@ -16,7 +16,7 @@ final class ImageController extends AbstractController
     /**
      * @Route("/z/image/{filename}", name="zoogle_cms_local_image")
      */
-    public function __invoke(string $filename, CacheItemPoolInterface $cache)
+    public function __invoke(string $filename, CacheItemPoolInterface $cache): Response
     {
         $content = $cache->getItem($filename)->get();
         if (empty($content)) {

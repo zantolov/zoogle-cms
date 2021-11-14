@@ -49,11 +49,9 @@ final class ZoogleCmsTwigExtension extends AbstractExtension
             return $this->documentHtml($item);
         }
 
-        if ($item instanceof DocumentElement) {
-            return $this->elementHtml($item);
-        }
+        \assert($item instanceof DocumentElement);
 
-        throw new \InvalidArgumentException();
+        return $this->elementHtml($item);
     }
 
     public function documentHtml(Document $document): string

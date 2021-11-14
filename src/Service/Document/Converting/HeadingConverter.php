@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Service\Document\Converting;
 
-use Google\Service\Docs\Paragraph;
 use Zantolov\ZoogleCms\Model\Document\Heading;
+use Zantolov\ZoogleCms\Model\Google\Paragraph;
 
 /**
  * @internal
@@ -25,23 +25,27 @@ final class HeadingConverter extends AbstractContentElementConverter
     ];
 
     /**
-     * @param Paragraph<Paragraph> $paragraph
-     *
      * @return list<Heading>
      */
     public function convert(Paragraph $paragraph): array
     {
         $content = $this->getUnformattedParagraphContent($paragraph);
-        $level = static::$headings[$paragraph->getParagraphStyle()->getNamedStyleType()];
+        $level = static::$headings[$paragraph->getNamedStyleType()] ?? null;
+
+        if ($level === null) {
+            throw new \RuntimeException('Unsupported heading given');
+        }
 
         return [new Heading($content, $level)];
     }
 
-    /**
-     * @param Paragraph<Paragraph> $paragraph
-     */
     public function supports(Paragraph $paragraph): bool
     {
-        return \array_key_exists($paragraph->getParagraphStyle()->getNamedStyleType(), static::$headings);
+        $style = $paragraph->getNamedStyleType();
+        if ($style === null) {
+            return false;
+        }
+
+        return \array_key_exists($style, static::$headings);
     }
 }

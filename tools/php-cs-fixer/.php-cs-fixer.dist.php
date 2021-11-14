@@ -51,7 +51,9 @@ return (new PhpCsFixer\Config())
         'php_unit_method_casing' => ['case' => 'snake_case'],
         'ordered_class_elements' => false,
         'multiline_whitespace_before_semicolons' => ['strategy' => 'no_multi_line'],
-        'final_class' => true,
+        'final_class' => false,
         'phpdoc_align' => ['align' => 'left'],
+        'single_line_comment_style' => false,
+        'phpdoc_to_comment' => false,
     ])
     ->setFinder($finder);

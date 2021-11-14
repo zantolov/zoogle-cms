@@ -61,7 +61,7 @@ final class HtmlConverter
         if ($item instanceof Paragraph) {
             $content = array_reduce(
                 $item->texts,
-                fn (string $carry, Text $text) => $carry.$this->renderItem($text),
+                fn (string $carry, Text $text): string => $carry.$this->renderItem($text),
                 ''
             );
 
@@ -71,7 +71,7 @@ final class HtmlConverter
         if ($item instanceof ListItem) {
             $content = array_reduce(
                 $item->texts,
-                fn (string $carry, Text $text) => $carry.$this->renderItem($text),
+                fn (string $carry, Text $text): string => $carry.$this->renderItem($text),
                 ''
             );
 
@@ -79,7 +79,7 @@ final class HtmlConverter
         }
 
         if ($item instanceof DocumentList) {
-            $listItems = array_map(fn (ListItem $item) => $this->renderItem($item), $item->items);
+            $listItems = array_map(fn (ListItem $item): string => $this->renderItem($item), $item->items);
             $listItems = implode("\n", $listItems);
 
             return match ($item->type) {

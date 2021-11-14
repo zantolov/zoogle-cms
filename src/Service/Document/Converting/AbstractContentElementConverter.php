@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Service\Document\Converting;
 
+use Zantolov\ZoogleCms\Model\Google\Paragraph;
+use Zantolov\ZoogleCms\Model\Google\ParagraphElement;
+
 /**
  * @internal
  */
@@ -12,44 +15,45 @@ abstract class AbstractContentElementConverter implements ElementConverter
     /**
      * Joins all content in a given paragraph without any formatting.
      */
-    protected function getUnformattedParagraphContent(\Google_Service_Docs_Paragraph $paragraph): string
+    protected function getUnformattedParagraphContent(Paragraph $paragraph): string
     {
         return array_reduce(
             $paragraph->getElements(),
             static fn (
                 string $carry,
-                \Google_Service_Docs_ParagraphElement $element
-            ) => $carry.(trim($element?->getTextRun()?->getContent() ?: '')),
+                ParagraphElement $element
+            ) => $carry.(trim($element->getTextRun()?->getContent() ?: '')),
             ''
         );
     }
 
-    protected function getFormattedParagraphContent(\Google_Service_Docs_Paragraph $paragraph): string
+    protected function getFormattedParagraphContent(Paragraph $paragraph): string
     {
         return array_reduce(
             $paragraph->getElements(),
             fn (
                 string $carry,
-                \Google_Service_Docs_ParagraphElement $element
+                ParagraphElement $element
             ) => $carry.$this->getFormattedParagraphElementContent($element),
             ''
         );
     }
 
-    private function getFormattedParagraphElementContent(\Google_Service_Docs_ParagraphElement $element): string
+    private function getFormattedParagraphElementContent(ParagraphElement $element): string
     {
-        if ($element->getTextRun() === null || empty(trim($element->getTextRun()))) {
+        $textRun = $element->getTextRun();
+        if ($textRun === null) {
             return '';
         }
 
-        $type = $element->getTextRun()->getTextStyle();
-        $content = $element->getTextRun()->getContent();
+        $content = $textRun->getContent();
+        if ($content === null || empty(trim($content))) {
+            return '';
+        }
 
-        if ($type->getLink()) {
-            $link = $type->getLink();
-            $url = $link->getUrl();
-
-            return sprintf('<a href="%s">%s</a>', $url, $content);
+        $url = $textRun->getTextStyle()?->getLinkUrl();
+        if ($url !== null) {
+            return \Safe\sprintf('<a href="%s">%s</a>', $url, $content);
         }
 
         // @todo bold

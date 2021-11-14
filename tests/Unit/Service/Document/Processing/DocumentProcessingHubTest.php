@@ -24,7 +24,7 @@ final class DocumentProcessingHubTest extends TestCase
         $processor1->expects($this->atLeastOnce())->method('priority')->willReturn(1);
         $processor1->expects($this->once())
             ->method('process')
-            ->willReturnCallback(static function (Document $document) use (&$executionOrder) {
+            ->willReturnCallback(static function (Document $document) use (&$executionOrder): Document {
                 $executionOrder[] = 1;
 
                 return $document;
@@ -33,7 +33,7 @@ final class DocumentProcessingHubTest extends TestCase
         $processor2->expects($this->atLeastOnce())->method('priority')->willReturn(2);
         $processor2->expects($this->once())
             ->method('process')
-            ->willReturnCallback(static function (Document $document) use (&$executionOrder) {
+            ->willReturnCallback(static function (Document $document) use (&$executionOrder): Document {
                 $executionOrder[] = 2;
 
                 return $document;
@@ -42,7 +42,7 @@ final class DocumentProcessingHubTest extends TestCase
         $processor3->expects($this->atLeastOnce())->method('priority')->willReturn(3);
         $processor3->expects($this->once())
             ->method('process')
-            ->willReturnCallback(static function (Document $document) use (&$executionOrder) {
+            ->willReturnCallback(static function (Document $document) use (&$executionOrder): Document {
                 $executionOrder[] = 3;
 
                 return $document;

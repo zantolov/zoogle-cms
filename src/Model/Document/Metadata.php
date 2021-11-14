@@ -6,24 +6,33 @@ namespace Zantolov\ZoogleCms\Model\Document;
 
 final class Metadata implements DocumentElement
 {
-    private array $values = [];
+    /**
+     * @var array<string, mixed>
+     */
+    private array $values;
 
+    /**
+     * @param array<string, mixed> $values
+     */
     public function __construct(array $values)
     {
         $this->values = $values;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function all(): array
     {
         return $this->values;
     }
 
-    public function get(string $key)
+    public function get(string $key): mixed
     {
         return $this->values[$key] ?? null;
     }
 
-    public function set(string $key, $value): void
+    public function set(string $key, mixed $value): void
     {
         $this->values[$key] = $value;
     }
@@ -35,6 +44,6 @@ final class Metadata implements DocumentElement
 
     public function toString(): string
     {
-        return json_encode($this->values);
+        return \Safe\json_encode($this->values);
     }
 }

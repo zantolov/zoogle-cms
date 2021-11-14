@@ -8,17 +8,9 @@ use Assert\Assertion;
 
 final class GoogleDriveAuth
 {
-    /** @var string */
-    private $clientId;
-
-    /** @var string */
-    private $authConfigPath;
-
-    public function __construct(string $clientId, string $authConfigPath)
+    public function __construct(private string $clientId, private string $authConfigPath)
     {
-        $this->clientId = $clientId;
-        Assertion::file($authConfigPath);
-        $this->authConfigPath = $authConfigPath;
+        Assertion::file($this->authConfigPath);
     }
 
     public function getClientId(): string
