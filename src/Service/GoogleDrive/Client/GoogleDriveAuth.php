@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zantolov\ZoogleCms\Service\GoogleDrive\Client;
+namespace Zantolov\Zoogle\Cms\Service\GoogleDrive\Client;
 
 use Assert\Assertion;
 

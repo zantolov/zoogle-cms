@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zantolov\ZoogleCms\Service\GoogleDrive\Configuration;
+namespace Zantolov\Zoogle\Cms\Service\GoogleDrive\Configuration;
 
 final class Configuration
 {

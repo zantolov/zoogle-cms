@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Zantolov\ZoogleCms\Service\Document;
+namespace Zantolov\Zoogle\Cms\Service\Document;
 
-use Zantolov\ZoogleCms\Model\Document\Document;
-use Zantolov\ZoogleCms\Service\Document\Converting\Converter;
-use Zantolov\ZoogleCms\Service\Document\Processing\DocumentProcessingHub;
-use Zantolov\ZoogleCms\Service\GoogleDrive\Client\GoogleDriveClient;
+use Zantolov\Zoogle\Cms\Service\GoogleDrive\Client\GoogleDriveClient;
+use Zantolov\Zoogle\Model\Model\Document\Document;
+use Zantolov\Zoogle\Model\Service\Converting\Converter;
+use Zantolov\Zoogle\Model\Service\Processing\DocumentProcessingHub;
 
 final class DocumentRepository
 {

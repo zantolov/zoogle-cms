@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zantolov\ZoogleCms\Service\GoogleDrive\Client;
+namespace Zantolov\Zoogle\Cms\Service\GoogleDrive\Client;
 
 use Google\Client;
 use Google\Service\Docs;
@@ -10,7 +10,7 @@ use Google\Service\Docs\Document;
 use Google\Service\Drive;
 use Google\Service\Drive\DriveFile;
 use GuzzleHttp\Psr7\Response;
-use Zantolov\ZoogleCms\Service\GoogleDrive\Configuration\Configuration;
+use Zantolov\Zoogle\Cms\Service\GoogleDrive\Configuration\Configuration;
 
 final class BaseGoogleDriveClient implements GoogleDriveClient
 {

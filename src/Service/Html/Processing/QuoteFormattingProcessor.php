@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zantolov\ZoogleCms\Service\Html\Processing;
+namespace Zantolov\Zoogle\Cms\Service\Html\Processing;
 
 final class QuoteFormattingProcessor implements HtmlProcessor
 {
