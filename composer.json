@@ -9,12 +9,12 @@
     ],
     "autoload": {
         "psr-4": {
-            "Zantolov\\ZoogleCms\\": "src/"
+            "Zantolov\\Zoogle\\Cms\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\Zantolov\\ZoogleCms\\": "tests/"
+            "Tests\\Zantolov\\Zoogle\\Cms\\": "tests/"
         }
     },
     "require": {
