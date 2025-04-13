@@ -12,16 +12,39 @@
     }
   },
   "require": {
-    "php": ">=8.0",
-    "zantolov/toolbelt": "@dev",
+    "php": ">=8.4",
     "ext-json": "*",
+    "ext-dom": "*",
     "google/apiclient": "^2.2",
     "symfony/dom-crawler": "^5.2",
     "symfony/css-selector": "^5.2",
-    "ext-dom": "*",
     "symfony/config": "^5.2",
     "symfony/dependency-injection": "^5.2",
     "symfony/http-kernel": "^5.2",
-    "cocur/chain": "^0.9.0"
+    "cocur/chain": "^0.9.0",
+    "zantolov/zoogle-model": "dev-master"
+  },
+  "require-dev": {
+    "zantolov/toolbelt-dev": "dev-master"
+  },
+  "scripts": {
+    "code-style:fix": [
+      "PHP_CS_FIXER_IGNORE_ENV=1 PHP_CS_FIXER_FUTURE_MODE=1 php-cs-fixer fix --diff --ansi --using-cache=no"
+    ],
+    "code-style:check": [
+      "PHP_CS_FIXER_IGNORE_ENV=1 PHP_CS_FIXER_FUTURE_MODE=1 php-cs-fixer fix --dry-run --diff --ansi --using-cache=no"
+    ],
+    "phpstan": [
+      "phpstan analyse --ansi --memory-limit=-1 --no-progress"
+    ],
+    "rector:check": [
+      "rector --dry-run --ansi --no-progress-bar"
+    ],
+    "rector:fix": [
+      "rector --ansi --no-progress-bar"
+    ],
+    "tests": [
+      "phpunit --colors"
+    ]
   }
 }
