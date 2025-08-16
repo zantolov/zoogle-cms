@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Zantolov\ZoogleCms\Client;
 
+use Google\Client;
 use GuzzleHttp\Psr7\Response;
-use Zantolov\ZoogleCms\Configuration\Configuration;
 
 class BaseGoogleDriveClient implements GoogleDriveClient
 {
@@ -15,28 +15,23 @@ class BaseGoogleDriveClient implements GoogleDriveClient
 
     private const string FOLDER_MIME_TYPE = 'application/vnd.google-apps.folder';
 
-    private \Google_Client $client;
-
     /**
      * @var array<string, mixed>
      */
     private array $cache = [];
 
-    public function __construct(private readonly GoogleDriveAuth $auth, private readonly Configuration $configuration)
+    public function __construct(private readonly Client $client)
     {
         $this->initializeClient();
     }
 
     private function initializeClient(): void
     {
-        $this->client = new \Google_Client();
         $this->client->setApplicationName('Client_Library_Examples');
         $this->client->setScopes([
             \Google_Service_Drive::DRIVE_READONLY,
             \Google_Service_Docs::DOCUMENTS_READONLY,
         ]);
-        $this->client->setClientId($this->auth->getClientId());
-        $this->client->setAuthConfig($this->auth->getAuthConfig());
     }
 
     private function cached(string $key, callable $callback): mixed
@@ -57,7 +52,8 @@ class BaseGoogleDriveClient implements GoogleDriveClient
     {
         $cacheKey = json_encode([__METHOD__, $directoryId, $limit]);
 
-        return $this->cached($cacheKey, function () use ($directoryId, $limit): void { /** @phpstan-ignore-line return.type */
+        return $this->cached($cacheKey, function () use ($directoryId, $limit): array {
+            /** @phpstan-ignore-line return.type */
             $service = new \Google_Service_Drive($this->client);
 
             $query = [
@@ -93,7 +89,8 @@ class BaseGoogleDriveClient implements GoogleDriveClient
     {
         $cacheKey = json_encode([__METHOD__, $directoryId, $limit]);
 
-        return $this->cached($cacheKey, function () use ($directoryId, $limit) { /** @phpstan-ignore-line */
+        return $this->cached($cacheKey, function () use ($directoryId, $limit) {
+            /** @phpstan-ignore-line */
             $service = new \Google_Service_Drive($this->client);
 
             $query = [
@@ -116,7 +113,8 @@ class BaseGoogleDriveClient implements GoogleDriveClient
     {
         $cacheKey = json_encode([__METHOD__, $limit]);
 
-        return $this->cached($cacheKey, function () use ($limit) { /** @phpstan-ignore-line */
+        return $this->cached($cacheKey, function () use ($limit) {
+            /** @phpstan-ignore-line */
             $service = new \Google_Service_Drive($this->client);
 
             $query = [
@@ -139,7 +137,8 @@ class BaseGoogleDriveClient implements GoogleDriveClient
         $cacheKey = json_encode([__METHOD__, $limit, $query]);
         assert(is_string($cacheKey));
 
-        return $this->cached($cacheKey, function () use ($query, $limit) { /** @phpstan-ignore-line */
+        return $this->cached($cacheKey, function () use ($query, $limit) {
+            /** @phpstan-ignore-line */
             $service = new \Google_Service_Drive($this->client);
 
             $query = [
@@ -161,7 +160,8 @@ class BaseGoogleDriveClient implements GoogleDriveClient
     {
         $cacheKey = json_encode([__METHOD__, $fileId]);
 
-        return $this->cached($cacheKey, function () use ($fileId) { /** @phpstan-ignore-line */
+        return $this->cached($cacheKey, function () use ($fileId) {
+            /** @phpstan-ignore-line */
             $service = new \Google_Service_Drive($this->client);
 
             /** @var Response $file */
@@ -181,7 +181,8 @@ class BaseGoogleDriveClient implements GoogleDriveClient
     {
         $cacheKey = json_encode([__METHOD__, $fileId]);
 
-        return $this->cached($cacheKey, function () use ($fileId) { /** @phpstan-ignore-line */
+        return $this->cached($cacheKey, function () use ($fileId) {
+            /** @phpstan-ignore-line */
             $service = new \Google_Service_Drive($this->client);
 
             return $service->files->get(// @phpstan-ignore-line method.nonObject
