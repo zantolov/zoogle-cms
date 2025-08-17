@@ -1517,12 +1517,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zantolov/zoogle-model.git",
-                "reference": "4a4ebe8855511d3589d4b98e9c74cfcd86f4d630"
+                "reference": "1d203ff241e86db1998ec8e3ba6edf6e3af83366"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zantolov/zoogle-model/zipball/4a4ebe8855511d3589d4b98e9c74cfcd86f4d630",
-                "reference": "4a4ebe8855511d3589d4b98e9c74cfcd86f4d630",
+                "url": "https://api.github.com/repos/zantolov/zoogle-model/zipball/1d203ff241e86db1998ec8e3ba6edf6e3af83366",
+                "reference": "1d203ff241e86db1998ec8e3ba6edf6e3af83366",
                 "shasum": ""
             },
             "require": {
@@ -1531,7 +1531,7 @@
                 "ext-dom": "*",
                 "ext-json": "*",
                 "google/apiclient": "^2.11",
-                "php": ">=8.3",
+                "php": "^8.4",
                 "thecodingmachine/safe": "^3.0"
             },
             "require-dev": {
@@ -1563,7 +1563,7 @@
                 "issues": "https://github.com/zantolov/zoogle-model/issues",
                 "source": "https://github.com/zantolov/zoogle-model/tree/master"
             },
-            "time": "2025-04-13T18:10:17+00:00"
+            "time": "2025-08-17T17:31:40+00:00"
         }
     ],
     "packages-dev": [
