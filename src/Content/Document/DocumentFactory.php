@@ -26,6 +26,11 @@ class DocumentFactory
             throw new \InvalidArgumentException();
         }
 
+        return $this->fromId($id);
+    }
+
+    public function fromId(string $id): Document
+    {
         $googleDoc = $this->client->getDoc($id);
         $doc = $this->converter->convert($googleDoc);
         $doc = $this->processor->process($doc);
